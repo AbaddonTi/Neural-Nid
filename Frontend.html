@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Support Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        #chat-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 90%;
+            max-width: 600px;
+            height: 90vh;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1213427568393592832/-1.jpg?ex=65f56f7c&is=65e2fa7c&hm=ac16be747bd2e503d44e22f4e0a8736d8e6a2aec10167cc740c4218c13dbeb2f&');
+            background-size: cover;
+            background-position: center;
+        }
+
+
+        #message-list {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
+            min-height: 70%;
+        }
+
+        /* Existing styles for desktop */
+        #new-message-form {
+            margin-top: auto; /* Pushes the input form to the bottom */
+            display: flex;
+            padding: 10px;
+            background: #f0f2f5;
+        }
+
+        #new-message-input {
+            flex-grow: 1;
+            padding: 10px;
+            margin-right: 10px;
+            border: 2px solid #ccc;
+            border-radius: 20px;
+            outline: none;
+        }
+        #send-message-button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .message {
+            display: flex;
+            width: fit-content;
+            max-width: 80%; /* Ограничение максимальной ширины сообщения */
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 15px;
+        }
+        .sender {
+            font-weight: bold;
+        }
+        .text, .reply {
+            color: white; /* Цвет текста белый */
+            margin-top: 5px;
+            white-space: pre-wrap;
+        }
+
+        /* Адаптивный дизайн */
+        @media (max-width: 600px) {
+            #chat-container {
+                width: 100%;
+                height: calc(100vh - 60px); /* Subtract the height of the input bar */
+                max-width: none;
+                border-radius: 0;
+                margin: 0; /* Уберем отступы */
+                padding-bottom: 60px; /* Add padding to the bottom equal to the height of the input bar */
+            }
+
+            #message-list {
+                height: 100%; /* Ensure message list takes full height */
+                margin-bottom: 60px; /* Add margin to the bottom equal to the height of the input bar */
+            }
+
+            /* Fixed input form at the bottom */
+            #new-message-form {
+                position: fixed; /* Fix position to the bottom */
+                bottom: 0; /* Position at the bottom */
+                left: 0; /* Align to the left */
+                width: 100%; /* Full width */
+                padding: 10px; /* Add some padding */
+                background: #f0f2f5; /* Match the background */
+                box-shadow: 0 -2px 5px rgba(0,0,0,0.1); /* Add shadow to the top */
+                z-index: 100; /* Ensure it's above other elements */
+            }
+
+            #new-message-input,
+            #send-message-button {
+                padding: 15px; /* Adjust padding for better tap targets */
+                margin-right: 15px;
+            }
+
+            .message {
+                font-size: 14px; /* Меньший размер шрифта для сообщений на мобильных устройствах */
+                margin-bottom: 10px;
+                padding: 10px; /* Уменьшим отступы в сообщениях */
+                border-radius: 15px; /* Сделаем углы более закругленными */
+            }
+        }
+
+
+        .message.user {
+            background-color: #2d3e59;
+            margin-left: auto; /* Выравнивание сообщений пользователя по правой стороне */
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 20px;
+        }
+
+        .message.bot {
+            background-color: #202b3b;
+            margin-right: auto; /* Выравнивание сообщений бота по левой стороне */
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 20px;
+        }
+
+
+
+        /* Стиль индикатора загрузки */
+        .loading-spinner {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+<div id="chat-container">
+    <div id="message-list">
+        <!-- Сообщения будут отображаться здесь -->
+    </div>
+    <form id="new-message-form">
+        <input type="text" id="new-message-input" placeholder="Write your message here..." required>
+        <button type="submit" id="send-message-button">Send</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('new-message-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const messageInput = document.getElementById('new-message-input');
+        const sendButton = document.getElementById('send-message-button');
+        const messageText = messageInput.value.trim();
+        const messageList = document.getElementById('message-list');
+
+        if (messageText) {
+            sendButton.disabled = true; // Отключить кнопку отправки
+            messageInput.value = ''; // Очистить поле ввода сразу после отправки
+
+            const userMessageElement = document.createElement('div');
+            userMessageElement.classList.add('message', 'user');
+            userMessageElement.innerHTML = `<div class="text">${messageText}</div>`;
+            messageList.appendChild(userMessageElement);
+
+            // Показать индикатор загрузки
+            const loadingElement = document.createElement('div');
+            loadingElement.classList.add('loading-spinner');
+            messageList.appendChild(loadingElement);
+
+            fetch('https://44e1-46-193-0-230.ngrok-free.app/send_message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({message: messageText}),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const botMessageElement = document.createElement('div');
+                    botMessageElement.classList.add('message', 'bot');
+                    botMessageElement.innerHTML = `<div class="text">${data.reply}</div>`;
+
+                    messageList.replaceChild(botMessageElement, loadingElement); // Заменить индикатор загрузки сообщением от бота
+                    messageList.scrollTop = messageList.scrollHeight; // Прокрутка к последнему сообщению
+                    sendButton.disabled = false; // Включить кнопку отправки после получения ответа
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    messageList.removeChild(loadingElement); // Удалить индикатор загрузки при ошибке
+                    sendButton.disabled = false; // Включить кнопку отправки, если произошла ошибка
+                });
+        }
+
+        // Прокрутка к последнему сообщению
+        messageList.scrollTop = messageList.scrollHeight;
+
+    });
+
+</script>
+</body>
+</html>
