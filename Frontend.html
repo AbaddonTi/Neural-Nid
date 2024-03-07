@@ -40,9 +40,8 @@
             min-height: 70%;
         }
 
-        /* Existing styles for desktop */
         #new-message-form {
-            margin-top: auto; /* Pushes the input form to the bottom */
+            margin-top: auto;
             display: flex;
             padding: 10px;
             background: #f0f2f5;
@@ -68,7 +67,7 @@
         .message {
             display: flex;
             width: fit-content;
-            max-width: 80%; /* Ограничение максимальной ширины сообщения */
+            max-width: 80%;
             margin-bottom: 15px;
             padding: 10px;
             border-radius: 15px;
@@ -77,74 +76,70 @@
             font-weight: bold;
         }
         .text, .reply {
-            color: white; /* Цвет текста белый */
+            color: white;
             margin-top: 5px;
             white-space: pre-wrap;
         }
 
-        /* Адаптивный дизайн */
         @media (max-width: 600px) {
             #chat-container {
                 width: 100%;
-                height: calc(100vh - 60px); /* Subtract the height of the input bar */
+                height: calc(100vh - 60px);
                 max-width: none;
                 border-radius: 0;
-                margin: 0; /* Уберем отступы */
-                padding-bottom: 60px; /* Add padding to the bottom equal to the height of the input bar */
+                margin: 0;
+                padding-bottom: 60px;
             }
 
             #message-list {
-                height: 100%; /* Ensure message list takes full height */
-                margin-bottom: 60px; /* Add margin to the bottom equal to the height of the input bar */
+                height: 100%;
+                margin-bottom: 60px;
             }
 
-            /* Fixed input form at the bottom */
             #new-message-form {
-                position: fixed; /* Fix position to the bottom */
-                bottom: 0; /* Position at the bottom */
-                left: 0; /* Align to the left */
-                width: 100%; /* Full width */
-                padding: 10px; /* Add some padding */
-                background: #f0f2f5; /* Match the background */
-                box-shadow: 0 -2px 5px rgba(0,0,0,0.1); /* Add shadow to the top */
-                z-index: 100; /* Ensure it's above other elements */
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                padding: 10px;
+                background: #f0f2f5;
+                box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+                z-index: 100;
             }
 
             #new-message-input,
             #send-message-button {
-                padding: 15px; /* Adjust padding for better tap targets */
+                padding: 15px;
                 margin-right: 15px;
             }
 
             .message {
-                font-size: 14px; /* Меньший размер шрифта для сообщений на мобильных устройствах */
+                font-size: 14px;
                 margin-bottom: 10px;
-                padding: 10px; /* Уменьшим отступы в сообщениях */
-                border-radius: 15px; /* Сделаем углы более закругленными */
+                padding: 10px;
+                border-radius: 15px;
             }
         }
 
 
         .message.user {
             background-color: #2d3e59;
-            margin-left: auto; /* Выравнивание сообщений пользователя по правой стороне */
+            margin-left: auto;
             border-bottom-right-radius: 0;
             border-bottom-left-radius: 20px;
         }
 
         .message.bot {
             background-color: #202b3b;
-            margin-right: auto; /* Выравнивание сообщений бота по левой стороне */
+            margin-right: auto;
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 20px;
         }
 
 
-
-        /* Стиль индикатора загрузки */
         .loading-spinner {
-            border: 4px solid #f3f3f3; /* Light grey */
-            border-top: 4px solid #3498db; /* Blue */
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
             border-radius: 50%;
             width: 20px;
             height: 20px;
@@ -159,7 +154,6 @@
 <body>
 <div id="chat-container">
     <div id="message-list">
-        <!-- Сообщения будут отображаться здесь -->
     </div>
     <form id="new-message-form">
         <input type="text" id="new-message-input" placeholder="Write your message here..." required>
@@ -176,15 +170,14 @@
         const messageList = document.getElementById('message-list');
 
         if (messageText) {
-            sendButton.disabled = true; // Отключить кнопку отправки
-            messageInput.value = ''; // Очистить поле ввода сразу после отправки
+            sendButton.disabled = true;
+            messageInput.value = '';
 
             const userMessageElement = document.createElement('div');
             userMessageElement.classList.add('message', 'user');
             userMessageElement.innerHTML = `<div class="text">${messageText}</div>`;
             messageList.appendChild(userMessageElement);
 
-            // Показать индикатор загрузки
             const loadingElement = document.createElement('div');
             loadingElement.classList.add('loading-spinner');
             messageList.appendChild(loadingElement);
@@ -202,18 +195,16 @@
                     botMessageElement.classList.add('message', 'bot');
                     botMessageElement.innerHTML = `<div class="text">${data.reply}</div>`;
 
-                    messageList.replaceChild(botMessageElement, loadingElement); // Заменить индикатор загрузки сообщением от бота
-                    messageList.scrollTop = messageList.scrollHeight; // Прокрутка к последнему сообщению
-                    sendButton.disabled = false; // Включить кнопку отправки после получения ответа
+                    messageList.replaceChild(botMessageElement, loadingElement);
+                    messageList.scrollTop = messageList.scrollHeight;
+                    sendButton.disabled = false;
                 })
                 .catch((error) => {
                     console.error('Error:', error);
-                    messageList.removeChild(loadingElement); // Удалить индикатор загрузки при ошибке
-                    sendButton.disabled = false; // Включить кнопку отправки, если произошла ошибка
+                    messageList.removeChild(loadingElement);
+                    sendButton.disabled = false;
                 });
         }
-
-        // Прокрутка к последнему сообщению
         messageList.scrollTop = messageList.scrollHeight;
 
     });
