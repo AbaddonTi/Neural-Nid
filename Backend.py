@@ -35,6 +35,7 @@ def send_message():
     return jsonify(response)
 
 
+
 def format_ai_response(text):
     """
     Форматирует текст ответа ИИ, добавляя два перевода строки после
