@@ -29,7 +29,6 @@ def home():
 def send_message():
     data = request.json
     user_message = data.get('message')
-    # Получение ответа от OpenAI
     openai_response = get_reply_from_openai(user_message)
     response = {"reply": openai_response}
     return jsonify(response)
