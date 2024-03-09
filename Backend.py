@@ -5,14 +5,10 @@ import re
 import openai
 import logging
 
-# Настройка Flask приложения
 app = Flask(__name__, static_url_path='', static_folder='C:/Users/AbaddonTIJ/PycharmProjects/pythonProject/ChatBot')
-CORS(app)  # Разрешаем CORS для всех доменов на всех маршрутах
+CORS(app)
 
-# Настройка логирования
 logging.basicConfig(level=logging.INFO)
-
-# Настройка ключа API OpenAI
 openai.api_key = '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'
 
 @app.before_request
@@ -22,7 +18,6 @@ def log_request_info():
 
 @app.route('/')
 def home():
-    # Возвращает файл index.html из указанной директории
     return send_from_directory(app.static_folder, 'Frontend.html')
 
 @app.route('/send_message', methods=['POST'])
@@ -35,24 +30,16 @@ def send_message():
 
 
 def format_ai_response(text):
-    """
-    Форматирует текст ответа ИИ, добавляя два перевода строки после
-    точки, восклицательного знака, вопросительного знака и двоеточия,
-    если после них идет пробел, но нет двух переводов строки.
-    """
-    # Добавляем два перевода строки после знаков пунктуации, если нужно
     formatted_text = re.sub(r'(\.|\!|\?|\:)(\s)(?!\s)', r'\1\2\n\n', text)
     return formatted_text
 
 
 def get_reply_from_openai(user_message):
-    # Определите ваш личный промпт как начальное сообщение диалога
     personal_prompt = {
         "role": "system",
         "content": "Imagine you are a personal tourist assistant specialized in providing information about Montpellier, France, and its surroundings. Your goal is to help tourists by answering their questions clearly and concisely, offering guidance and recommendations as if you were a local guide. Respond to inquiries in the language in which they are asked, focusing exclusively on topics related to tourism in Montpellier and its nearby areas. Avoid answering questions that are not related to this theme. Provide efficient, to-the-point advice to ensure tourists receive exactly the information they need for a pleasant visit."
     }
 
-    # Структурируйте сообщения для диалога
     messages = [
         personal_prompt,
         {"role": "user", "content": user_message}
