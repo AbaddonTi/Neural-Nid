@@ -5,7 +5,7 @@ import re
 import openai
 import logging
 
-app = Flask(__name__, static_url_path='', static_folder='C:/Users/AbaddonTIJ/PycharmProjects/pythonProject/ChatBot')
+app = Flask(__name__, static_url_path='', static_folder='static')
 CORS(app)
 
 logging.basicConfig(level=logging.INFO)
