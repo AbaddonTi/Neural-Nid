@@ -1,6 +1,6 @@
 FROM python:3.9
 WORKDIR /app
 COPY . /app
-RUN pip install Flask flask-cors openai
+RUN pip install -r requirements.txt
 EXPOSE 5500
 CMD ["python", "Backend.py"]
