@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 
 import re
+import os
 import openai
 import logging
 
@@ -9,7 +10,7 @@ app = Flask(__name__, static_url_path='', static_folder='static')
 CORS(app)
 
 logging.basicConfig(level=logging.INFO)
-openai.api_key = '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'
+openai.api_key = os.getenv('OPENAI_API_KEY')
 
 @app.before_request
 def log_request_info():
