@@ -71,8 +71,15 @@
         }
 
         #send-message-button {
+
+            background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1217914886932398131/232.png?ex=6605c2a0&is=65f34da0&hm=510c9fc862d87d65aae3581e2175000f9da949a9812a75485c91399e58833a4c&');
+            background-size: cover; /* Или используйте 'contain' для сохранения пропорций */
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 40px; /* или другой размер, который вам нужен */
+            height: 40px;
             padding: 10px 20px;
-            background-color: rgba(18, 147, 147, 0.4);
+            background-color: rgba(18, 147, 147, 0.0);
             color: white;
             border: none;
             border-radius: 20px;
@@ -256,16 +263,17 @@
             }
 
             body {
-                padding-top: 50px;
+                display: flex;
+                flex-direction: column;
+                height: 100vh;
+                padding-top: 75px;
             }
             #chat-container {
                 display: flex;
                 flex-direction: column;
-                justify-content: space-between;
-                height: 89vh;
+                flex-grow: 1;
                 overflow: hidden;
             }
-
 
             #message-list {
                 flex-grow: 1;
@@ -276,9 +284,10 @@
                 position: fixed;
                 bottom: 0;
                 left: 0;
-                width: 100%;
+                right: 0;
                 box-sizing: border-box;
                 padding: 8px;
+                padding-bottom: calc(8px + env(safe-area-inset-bottom));
                 background-color: rgba(255, 255, 255, 0.2);
                 backdrop-filter: blur(2px);
             }
@@ -300,6 +309,7 @@
             }
         }
 
+
     </style>
 </head>
 <body>
@@ -315,7 +325,9 @@
     </div>
     <form id="new-message-form">
         <input type="text" id="new-message-input" placeholder="Posez vos questions ici..." required>
-        <button type="submit" id="send-message-button">Envoyer</button>
+        <button type="submit" id="send-message-button"></button>
+
+
     </form>
 </div>
 <div id="teams" class="page-content">
