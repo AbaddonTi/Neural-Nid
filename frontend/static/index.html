@@ -70,11 +70,9 @@
             opacity: 0.9;
         }
 
-
-
         #send-message-button {
             padding: 10px 20px;
-            background-color: rgba(0, 123, 255, 0.5);
+            background-color: rgba(18, 147, 147, 0.4);
             color: white;
             border: none;
             border-radius: 20px;
@@ -85,9 +83,8 @@
         }
 
         #send-message-button:hover, #send-message-button:focus {
-            background-color: rgba(0, 123, 255, 0.9);
+            background-color: rgba(21, 208, 218, 0.5);
         }
-
 
         .message {
             display: flex;
@@ -106,47 +103,6 @@
             white-space: pre-wrap;
         }
 
-        @media (max-width: 600px) {
-            #chat-container {
-                width: 100%;
-                height: calc(100vh - 60px);
-                max-width: none;
-                border-radius: 0;
-                margin: 0;
-                padding-bottom: 60px;
-            }
-
-            #message-list {
-                height: 100%;
-                margin-bottom: 60px;
-            }
-
-            #new-message-form {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                padding: 10px;
-                background: #f0f2f5;
-                box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
-                z-index: 100;
-            }
-
-            #new-message-input,
-            #send-message-button {
-                padding: 15px;
-                margin-right: 15px;
-            }
-
-            .message {
-                font-size: 14px;
-                margin-bottom: 10px;
-                padding: 10px;
-                border-radius: 15px;
-            }
-        }
-
-
         .message.user {
             background-color: rgba(86, 141, 139, 0.8);
             margin-left: auto;
@@ -160,8 +116,6 @@
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 20px;
         }
-
-
 
         .loading-spinner {
             border: 4px solid #f3f3f3;
@@ -193,13 +147,13 @@
             margin: 0 15px;
             color: white;
             padding: 10px 15px;
-            background-color: rgba(0, 123, 255, 0.4);
+            background-color: rgba(18, 147, 147, 0.5);
             border-radius: 20px;
             transition: background-color 0.3s ease;
         }
 
         nav a:hover {
-            background-color: rgba(0, 123, 255, 0.8);
+            background-color: rgba(21, 208, 218, 0.6);
         }
 
         .page-content {
@@ -213,15 +167,13 @@
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Центрирование по вертикали */
-            align-items: center; /* Центрирование по горизонтали */
-            height: 100vh; /* Высота каждого блока равна 100% высоты видимой части окна браузера */
-            text-align: center; /* Центрирование текста */
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
         }
 
-
-
-        .parallax-background {
+        .background {
             position: fixed;
             top: 0;
             left: 0;
@@ -234,11 +186,6 @@
 
         #background-image-1 {
             background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1216557636242243644/abaddontij_A_photo_of_an_abandoned_palace_in_the_middle_of_Pari_2fdd602a-00ff-4933-8d91-8057a104e4a3.png?ex=6600d297&is=65ee5d97&hm=111bb341137d3311c6bb0500d13c3a93fab9a4baa90ddd68d985d9d19176c4fc&');
-        }
-
-        #background-image-2 {
-            background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1216557636242243644/abaddontij_A_photo_of_an_abandoned_palace_in_the_middle_of_Pari_2fdd602a-00ff-4933-8d91-8057a104e4a3.png?ex=6600d297&is=65ee5d97&hm=111bb341137d3311c6bb0500d13c3a93fab9a4baa90ddd68d985d9d19176c4fc&');
-            z-index: -2;
         }
 
         ::-webkit-scrollbar {
@@ -270,69 +217,107 @@
         .team-member {
             display: flex;
             align-items: center;
-            margin-bottom: 40px; /* Отступ между блоками */
+            margin-bottom: 40px;
             width: 100%;
         }
 
         .avatar {
-            width: 15vw; /* Ширина аватара будет 15% от ширины видимой области окна */
-            height: 15vw; /* Высота аватара для сохранения пропорций */
-            border-radius: 5%; /* Сделаем аватар круглым */
-            object-fit: cover; /* Убедимся, что изображение покрывает всю область, сохраняя пропорции */
-            margin-right: 20px; /* Отступ между аватаром и текстом */
+            width: 15vw;
+            height: 15vw;
+            border-radius: 5%;
+            object-fit: cover;
+            margin-right: 20px;
         }
 
         .member-info {
-            flex: 1; /* Занимает оставшееся пространство */
-            text-align: left; /* Текст выравнивается по левому краю */
+            flex: 1;
+            text-align: left;
         }
 
         .member-info h3, .member-info p {
-            color: white; /* Цвет текста */
+            color: white;
             text-shadow: 0 0 8px rgba(0, 0, 0),
                 /*0 0 20px rgba(0, 0, 0), */
             0 0 30px rgba(0, 0, 0);
-            margin: 0; /* Убираем стандартные отступы */
-            line-height: 1.5; /* Улучшаем читаемость за счет межстрочного интервала */
+            margin: 0;
+            line-height: 1.5;
         }
 
 
         .member-info p {
-            line-height: 1.5; /* Улучшаем читаемость за счет межстрочного интервала */
+            line-height: 1.5;
         }
 
+        @media (max-width: 600px) {
+            body, html {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                padding-top: 50px;
+            }
+            #chat-container {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                height: calc(100vh - 50px);
+                overflow: hidden;
+            }
 
 
+            #message-list {
+                flex-grow: 1;
+                overflow-y: auto;
+            }
 
+            #new-message-form {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                box-sizing: border-box;
+                padding: 8px;
+                background-color: rgba(255, 255, 255, 0.2);
+                backdrop-filter: blur(2px);
+            }
 
-
+            #new-message-input, #send-message-button {
+                padding: 8px 15px;
+            }
+            #send-message-button {
+                font-size: 14px;
+            }
+            nav a {
+                margin: 0 10px;
+                padding: 5px 10px;
+                font-size: 14px;
+            }
+            .team-member .avatar {
+                width: 20vw;
+                height: 20vw;
+            }
+        }
 
     </style>
 </head>
 <body>
-
-<div id="background-image-1" class="parallax-background"></div>
-<div id="background-image-2" class="parallax-background"></div>
-
-
+<div id="background-image-1" class="background"></div>
 <nav>
     <a href="#chat-container" id="chat-link">Chat</a>
     <a href="#teams" id="teams-link">Équipe</a>
-    <a href="#about-us" id="about-link">À propos de nous</a>
+    <a href="#about-us" id="about-link">Nous</a>
     <a href="#contacts" id="contact-link">Contacts</a>
 </nav>
-
-
 <div id="chat-container">
     <div id="message-list">
     </div>
     <form id="new-message-form">
-        <input type="text" id="new-message-input" placeholder="Ecrivez votre message ici..." required>
+        <input type="text" id="new-message-input" placeholder="Posez vos questions ici..." required>
         <button type="submit" id="send-message-button">Envoyer</button>
     </form>
 </div>
-
-
 <div id="teams" class="page-content">
     <h2>Équipe</h2>
     <div class="team-member">
@@ -350,7 +335,6 @@
         </div>
     </div>
 </div>
-
 
 <div id="about-us" class="page-content">
     <h2>À propos de nous</h2>
@@ -371,19 +355,15 @@
 
 <div id="contacts" class="page-content">
     <h2>Contacts</h2>
-    <p>You can contact us through email at neuronalnid@gmail.com </p>
+    <p>Pour toute question veuillez nous contacter par email neuronalnid@gmail.com </p>
 </div>
 
 <script>
-
-
     window.onload = function() {
         setTimeout(() => {
             window.scrollTo(0, 0);
         }, 100);
     };
-
-
 
     document.querySelectorAll('nav a').forEach(link => {
         link.addEventListener('click', (e) => {
@@ -399,8 +379,6 @@
             });
         });
     });
-
-
 
     const links = {
         'chat-link': 'chat-container',
@@ -468,9 +446,7 @@
                 });
         }
         messageList.scrollTop = messageList.scrollHeight;
-
     });
-
 </script>
 </body>
 </html>
