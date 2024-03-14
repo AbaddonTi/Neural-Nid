@@ -6,11 +6,8 @@
     <title>Online Support Chat</title>
     <style>
         body {
+            padding-top: 75px;
             font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
             background-color: #f0f2f5;
         }
@@ -18,16 +15,20 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            width: 90%;
+            width: 100%;
+            margin: auto;
+            margin-bottom: 100px;
+            min-height: 80vh;
             max-width: 600px;
-            height: 90vh;
+            height: 85vh;
             background-color: #fff;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1213427568393592832/-1.jpg?ex=65f56f7c&is=65e2fa7c&hm=ac16be747bd2e503d44e22f4e0a8736d8e6a2aec10167cc740c4218c13dbeb2f&');
             background-size: cover;
             background-position: center;
+            background-color: rgba(240, 242, 245, 0.1);
+            backdrop-filter: blur(2px);
         }
 
 
@@ -44,26 +45,50 @@
             margin-top: auto;
             display: flex;
             padding: 10px;
-            background: #f0f2f5;
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(2px);
         }
 
         #new-message-input {
             flex-grow: 1;
             padding: 10px;
             margin-right: 10px;
-            border: 2px solid #ccc;
+            border: 2px solid rgba(255, 255, 255, 0.5);
             border-radius: 20px;
             outline: none;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            transition: border-color 0.3s ease;
         }
+
+        #new-message-input:focus {
+            border-color: rgba(0, 123, 255, 0.5);
+        }
+
+        #new-message-input::placeholder {
+            color: white;
+            opacity: 0.9;
+        }
+
+
+
         #send-message-button {
             padding: 10px 20px;
-            background-color: #007bff;
+            background-color: rgba(0, 123, 255, 0.5);
+            color: white;
             border: none;
             border-radius: 20px;
-            color: white;
             cursor: pointer;
             font-weight: bold;
+            transition: background-color 0.3s ease;
+            outline: none;
         }
+
+        #send-message-button:hover, #send-message-button:focus {
+            background-color: rgba(0, 123, 255, 0.9);
+        }
+
+
         .message {
             display: flex;
             width: fit-content;
@@ -123,18 +148,19 @@
 
 
         .message.user {
-            background-color: #2d3e59;
+            background-color: rgba(86, 141, 139, 0.8);
             margin-left: auto;
             border-bottom-right-radius: 0;
             border-bottom-left-radius: 20px;
         }
 
         .message.bot {
-            background-color: #202b3b;
+            background-color: rgba(133, 136, 119, 0.8);
             margin-right: auto;
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 20px;
         }
+
 
 
         .loading-spinner {
@@ -149,19 +175,255 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        nav {
+            width: 100%;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+            background-color: rgba(240, 242, 245, 0.1);
+            backdrop-filter: blur(5px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        nav a {
+            text-decoration: none;
+            margin: 0 15px;
+            color: white;
+            padding: 10px 15px;
+            background-color: rgba(0, 123, 255, 0.4);
+            border-radius: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: rgba(0, 123, 255, 0.8);
+        }
+
+        .page-content {
+            margin: auto;
+            margin-bottom: 100px;
+            min-height: calc(100vh - 100px);
+            max-width: 600px;
+            color: white;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Центрирование по вертикали */
+            align-items: center; /* Центрирование по горизонтали */
+            height: 100vh; /* Высота каждого блока равна 100% высоты видимой части окна браузера */
+            text-align: center; /* Центрирование текста */
+        }
+
+
+
+        .parallax-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-size: cover;
+            background-position: center;
+        }
+
+        #background-image-1 {
+            background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1216557636242243644/abaddontij_A_photo_of_an_abandoned_palace_in_the_middle_of_Pari_2fdd602a-00ff-4933-8d91-8057a104e4a3.png?ex=6600d297&is=65ee5d97&hm=111bb341137d3311c6bb0500d13c3a93fab9a4baa90ddd68d985d9d19176c4fc&');
+        }
+
+        #background-image-2 {
+            background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1216557636242243644/abaddontij_A_photo_of_an_abandoned_palace_in_the_middle_of_Pari_2fdd602a-00ff-4933-8d91-8057a104e4a3.png?ex=6600d297&is=65ee5d97&hm=111bb341137d3311c6bb0500d13c3a93fab9a4baa90ddd68d985d9d19176c4fc&');
+            z-index: -2;
+        }
+
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(150, 112, 121, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: rgba(150, 112, 121, 0.5);
+            border-radius: 6px;
+        }
+
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.5) rgba(255, 255, 255, 0.2);
+        }
+
+
+        .page-content h2, .page-content p {
+            color: white;
+            text-shadow: 0 0 8px rgba(0, 0, 0),
+                /*0 0 20px rgba(0, 0, 0), */
+            0 0 30px rgba(0, 0, 0);
+        }
+
+        .team-member {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px; /* Отступ между блоками */
+            width: 100%;
+        }
+
+        .avatar {
+            width: 15vw; /* Ширина аватара будет 15% от ширины видимой области окна */
+            height: 15vw; /* Высота аватара для сохранения пропорций */
+            border-radius: 5%; /* Сделаем аватар круглым */
+            object-fit: cover; /* Убедимся, что изображение покрывает всю область, сохраняя пропорции */
+            margin-right: 20px; /* Отступ между аватаром и текстом */
+        }
+
+        .member-info {
+            flex: 1; /* Занимает оставшееся пространство */
+            text-align: left; /* Текст выравнивается по левому краю */
+        }
+
+        .member-info h3, .member-info p {
+            color: white; /* Цвет текста */
+            text-shadow: 0 0 8px rgba(0, 0, 0),
+                /*0 0 20px rgba(0, 0, 0), */
+            0 0 30px rgba(0, 0, 0);
+            margin: 0; /* Убираем стандартные отступы */
+            line-height: 1.5; /* Улучшаем читаемость за счет межстрочного интервала */
+        }
+
+
+        .member-info p {
+            line-height: 1.5; /* Улучшаем читаемость за счет межстрочного интервала */
+        }
+
+
+
+
+
+
+
     </style>
 </head>
 <body>
+
+<div id="background-image-1" class="parallax-background"></div>
+<div id="background-image-2" class="parallax-background"></div>
+
+
+<nav>
+    <a href="#chat-container" id="chat-link">Chat</a>
+    <a href="#teams" id="teams-link">Équipe</a>
+    <a href="#about-us" id="about-link">À propos de nous</a>
+    <a href="#contacts" id="contact-link">Contacts</a>
+</nav>
+
+
 <div id="chat-container">
     <div id="message-list">
     </div>
     <form id="new-message-form">
-        <input type="text" id="new-message-input" placeholder="Write your message here..." required>
-        <button type="submit" id="send-message-button">Send</button>
+        <input type="text" id="new-message-input" placeholder="Ecrivez votre message ici..." required>
+        <button type="submit" id="send-message-button">Envoyer</button>
     </form>
 </div>
 
+
+<div id="teams" class="page-content">
+    <h2>Équipe</h2>
+    <div class="team-member">
+        <img src="https://cdn.discordapp.com/attachments/1072482277784825907/1217842399057940581/22222.jpg?ex=66057f1e&is=65f30a1e&hm=e61abe6de28faabdbcf655cf6134a3d2b6cadb11a82fdf4338349f80c9f39c98&" alt="Anastasia" class="avatar">
+        <div class="member-info">
+            <h3>Anastasia</h3>
+            <p>Anastasia a consacré une grande partie de sa vie au domaine de la gestion des ventes et de la communication avec les personnes. <br>La génération d'idées, le prompt engineering et la promotion de nos projets neuronaux sont ses tâches au sein de l'entreprise.</p>
+        </div>
+    </div>
+    <div class="team-member">
+        <img src="https://cdn.discordapp.com/attachments/1072482277784825907/1217842397015445625/11111.jpg?ex=66057f1d&is=65f30a1d&hm=547a483729005ef17259fc605e61d16c926ba25eb92b44dd2f002ee5fe090062&" alt="Grigori" class="avatar">
+        <div class="member-info">
+            <h3>Grigorii</h3>
+            <p>Grigorii est spécialisé dans le développement de réseaux neuronaux et leur adaptation à différents besoins, bénéficiant d'une vaste expérience dans les projets liés au web 3.0. <br> Full stack développeur </p>
+        </div>
+    </div>
+</div>
+
+
+<div id="about-us" class="page-content">
+    <h2>À propos de nous</h2>
+    <p>NeuronalNid : l'innovation à la croisée des réseaux neuronaux et de l'intelligence artificielle (IA).
+
+        Nous visons à développer des solutions de réseaux neuronaux uniques qui tracent la voie vers un nouveau monde où les innovations sont destinées à transformer le progrès technique en un bienfait pour chaque personne. Nous envisageons un avenir où l'intelligence artificielle devient un guide intellectuel incontournable au quotidien, offrant des solutions personnalisées et intelligibles pour chacun.<br><br>
+
+        Notre mission est de marquer le passage à une nouvelle nouvelle Ére de communication, d'intégrer l'IA dans la vie quotidienne des individus, de concevoir un assistant personnel compréhensif pour toutes les interrogations et de créer un nouvel écosystème pour le monde des humains et des entreprises.<br><br>
+
+        Nous sommes convaincus que le développement technologique et son intégration dans l'environnement humain peuvent devenir des facteurs clés d'amélioration de la qualité de vie et des moteurs de progrès économique. Les nouvelles technologies au service de l'homme, c'est déjà notre réalité.<br><br>
+
+        NeuronalNid représente l'alliance de deux spécialistes aux profils diversifiés, unis par un objectif commun : servir la société par le biais des neurotechnologies. Notre équipe est une synergie de diversité et de professionnalisme, ce qui nous permet de créer des solutions complexes et multifonctionnelles. <br> <br>
+
+        NeuronalNid, c'est bien plus qu'une entreprise. C'est un mouvement vers un monde où chaque action, chaque décision est orientée vers la création d'une harmonie entre technologies et productivité, ouvrant la porte à une nouvelle époque où les technologies servent l'homme, enrichissant sa vie et élargissant les frontières du possible.<br> <br>
+
+        Ensemble, nous créons bien plus que de simples produits – nous façonnons l'avenir !  </p>
+</div>
+
+<div id="contacts" class="page-content">
+    <h2>Contacts</h2>
+    <p>You can contact us through email at neuronalnid@gmail.com </p>
+</div>
+
 <script>
+
+
+    window.onload = function() {
+        setTimeout(() => {
+            window.scrollTo(0, 0);
+        }, 100);
+    };
+
+
+
+    document.querySelectorAll('nav a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = e.target.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+
+            const offsetTop = targetElement.offsetTop - 75;
+
+            window.scrollTo({
+                top: offsetTop,
+                behavior: 'smooth'
+            });
+        });
+    });
+
+
+
+    const links = {
+        'chat-link': 'chat-container',
+        'teams-link': 'teams',
+        'about-link': 'about-us',
+        'contact-link': 'contacts',
+    };
+
+    function showContent(id) {
+        Object.values(links).forEach((value) => {
+            document.getElementById(value).classList.add('hidden');
+        });
+        document.getElementById(id).classList.remove('hidden');
+    }
+
+    document.querySelectorAll('nav a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const contentId = links[e.target.id];
+            showContent(contentId);
+        });
+    });
+
     document.getElementById('new-message-form').addEventListener('submit', function(event) {
         event.preventDefault();
         const messageInput = document.getElementById('new-message-input');
