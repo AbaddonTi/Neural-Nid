@@ -39,13 +39,9 @@ def get_device_info(user_agent):
 
     browser_info = f"{device.client_name()} {device.client_version()}"
     os_info = f"{device.os_name()} {device.os_version()}"
-    device_brand = device.device_brand_name()
-    device_model = device.device_model()
-
-    if device_brand and device_model:
-        device_info = f"{device_brand} {device_model}"
-    else:
-        device_info = "Unknown"
+    device_brand = device.device_brand()
+    device_model = device.device_model() if device.device_model() else "Unknown"
+    device_info = f"{device_brand} {device_model}" if device_brand else "Unknown"
 
     return device_type, browser_info, os_info, device_info
 
