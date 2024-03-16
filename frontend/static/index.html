@@ -466,11 +466,17 @@
                     botMessageElement.classList.add('message', 'bot');
                     botMessageElement.innerHTML = `<div class="text">${data.reply}</div>`;
 
-                    messageList.replaceChild(botMessageElement, loadingElement);
+                    messageList.appendChild(botMessageElement);
                     botMessageElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                    const lastUserMessage = messageList.querySelector('.message.user:last-of-type');
+                    if (lastUserMessage) {
+                        setTimeout(() => {
+                            lastUserMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }, 100);
+                    }
+
                     sendButton.disabled = false;
                 })
-
                 .catch((error) => {
                     console.error('Error:', error);
                     messageList.removeChild(loadingElement);
