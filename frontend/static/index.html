@@ -462,12 +462,15 @@
 
                 .then(response => response.json())
                 .then(data => {
+
+                    messageList.removeChild(loadingElement);
+
                     const botMessageElement = document.createElement('div');
                     botMessageElement.classList.add('message', 'bot');
                     botMessageElement.innerHTML = `<div class="text">${data.reply}</div>`;
 
                     messageList.appendChild(botMessageElement);
-                    botMessageElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                    botMessageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     const lastUserMessage = messageList.querySelector('.message.user:last-of-type');
                     if (lastUserMessage) {
                         setTimeout(() => {
@@ -481,6 +484,7 @@
                     console.error('Error:', error);
                     messageList.removeChild(loadingElement);
                     sendButton.disabled = false;
+
 
                     const errorBotMessageElement = document.createElement('div');
                     errorBotMessageElement.classList.add('message', 'bot');
