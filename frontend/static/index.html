@@ -470,7 +470,10 @@
                     botMessageElement.innerHTML = `<div class="text">${data.reply}</div>`;
 
                     messageList.appendChild(botMessageElement);
-                    botMessageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    const messageListRect = messageList.getBoundingClientRect();
+                    const messageRect = botMessageElement.getBoundingClientRect();
+                    const scrollOffset = messageRect.top - messageListRect.top + messageList.scrollTop;
+                    messageList.scrollTo({ top: scrollOffset, behavior: 'smooth' });
                     const lastUserMessage = messageList.querySelector('.message.user:last-of-type');
                     if (lastUserMessage) {
                         setTimeout(() => {
@@ -493,7 +496,6 @@
                     errorBotMessageElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
                 });
         }
-        messageList.scrollTop = messageList.scrollHeight;
     });
 </script>
 </body>
