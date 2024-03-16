@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Support Chat</title>
+    <title>Votre Guide</title>
+    <link rel="icon" type="image/png" sizes="512x512" href="https://cdn.discordapp.com/attachments/1072482277784825907/1218525956348710962/icon-base_512x512.png?ex=6607fbbb&is=65f586bb&hm=94cc4a7e3227cd935edf4cdb6b1ba4d5abeb7d872d203247b4646f771941012e&">
     <style>
         body {
             padding-top: 75px;
@@ -72,11 +73,11 @@
 
         #send-message-button {
 
-            background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1217914886932398131/232.png?ex=6605c2a0&is=65f34da0&hm=510c9fc862d87d65aae3581e2175000f9da949a9812a75485c91399e58833a4c&');
-            background-size: cover; /* Или используйте 'contain' для сохранения пропорций */
+            background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1218495003769438269/icon-send.png?ex=6607dee7&is=65f569e7&hm=204110941c95d043baf5fa6b0f8f056458437168b68d7985abb06da995f1c3d5&');
+            background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            width: 40px; /* или другой размер, который вам нужен */
+            width: 40px;
             height: 40px;
             padding: 10px 20px;
             background-color: rgba(18, 147, 147, 0.0);
@@ -192,7 +193,7 @@
         }
 
         #background-image-1 {
-            background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1216557636242243644/abaddontij_A_photo_of_an_abandoned_palace_in_the_middle_of_Pari_2fdd602a-00ff-4933-8d91-8057a104e4a3.png?ex=6600d297&is=65ee5d97&hm=111bb341137d3311c6bb0500d13c3a93fab9a4baa90ddd68d985d9d19176c4fc&');
+            background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1218495002909610084/background-image-1.jpg?ex=6607dee7&is=65f569e7&hm=e2f1fe6c4d8e28f3de3c457e404f39f519162e77a56eda8aee73b8a1dfed7c63&');
         }
 
         ::-webkit-scrollbar {
@@ -308,8 +309,6 @@
                 height: 20vw;
             }
         }
-
-
     </style>
 </head>
 <body>
@@ -333,14 +332,14 @@
 <div id="teams" class="page-content">
     <h2>Équipe</h2>
     <div class="team-member">
-        <img src="https://cdn.discordapp.com/attachments/1072482277784825907/1217842399057940581/22222.jpg?ex=66057f1e&is=65f30a1e&hm=e61abe6de28faabdbcf655cf6134a3d2b6cadb11a82fdf4338349f80c9f39c98&" alt="Anastasia" class="avatar">
+        <img src="https://cdn.discordapp.com/attachments/1072482277784825907/1218495002163019847/anastasia-avatar.jpg?ex=6607dee7&is=65f569e7&hm=146d448a38e13d104ec367416d0928c0f2bc1ff8c2210a68af9e79423d67ac3a&" alt="Anastasia" class="avatar">
         <div class="member-info">
             <h3>Anastasia</h3>
             <p>Anastasia a consacré une grande partie de sa vie au domaine de la gestion des ventes et de la communication avec les personnes. <br>La génération d'idées, le prompt engineering et la promotion de nos projets neuronaux sont ses tâches au sein de l'entreprise.</p>
         </div>
     </div>
     <div class="team-member">
-        <img src="https://cdn.discordapp.com/attachments/1072482277784825907/1217842397015445625/11111.jpg?ex=66057f1d&is=65f30a1d&hm=547a483729005ef17259fc605e61d16c926ba25eb92b44dd2f002ee5fe090062&" alt="Grigori" class="avatar">
+        <img src="https://cdn.discordapp.com/attachments/1072482277784825907/1218495003467190276/grigorii-avatar.jpg?ex=6607dee7&is=65f569e7&hm=39e00801645831256e9d06def621ab150c045af6bf7ab28008147e1792bf863b&" alt="Grigori" class="avatar">
         <div class="member-info">
             <h3>Grigorii</h3>
             <p>Grigorii est spécialisé dans le développement de réseaux neuronaux et leur adaptation à différents besoins, bénéficiant d'une vaste expérience dans les projets liés au web 3.0. <br> Full stack développeur </p>
@@ -434,6 +433,7 @@
             loadingElement.classList.add('loading-spinner');
             messageList.appendChild(loadingElement);
 
+
             fetch('https://neuronalnid.com/api/send_message', {
                 method: 'POST',
                 headers: {
@@ -441,6 +441,7 @@
                 },
                 body: JSON.stringify({message: messageText}),
             })
+
                 .then(response => response.json())
                 .then(data => {
                     const botMessageElement = document.createElement('div');
@@ -450,11 +451,22 @@
                     messageList.replaceChild(botMessageElement, loadingElement);
                     messageList.scrollTop = messageList.scrollHeight;
                     sendButton.disabled = false;
+
+                    if (window.innerWidth <= 600) {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
                 })
+
                 .catch((error) => {
                     console.error('Error:', error);
                     messageList.removeChild(loadingElement);
                     sendButton.disabled = false;
+
+                    const errorBotMessageElement = document.createElement('div');
+                    errorBotMessageElement.classList.add('message', 'bot');
+                    errorBotMessageElement.innerHTML = `<div class="text">Sorry, I'm still in maintenance for a while...</div>`;
+                    messageList.appendChild(errorBotMessageElement);
+                    messageList.scrollTop = messageList.scrollHeight;
                 });
         }
         messageList.scrollTop = messageList.scrollHeight;
