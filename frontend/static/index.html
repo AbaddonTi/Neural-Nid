@@ -438,8 +438,14 @@
             userMessageElement.classList.add('message', 'user');
             userMessageElement.innerHTML = `<div class="text">${messageText}</div>`;
             messageList.appendChild(userMessageElement);
+            userMessageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-            userMessageElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            setTimeout(() => {
+                window.scrollTo({
+                    top: messageList.offsetTop,
+                    behavior: 'smooth'
+                });
+            }, 100);
 
             const loadingElement = document.createElement('div');
             loadingElement.classList.add('loading-spinner');
