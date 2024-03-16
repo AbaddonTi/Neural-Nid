@@ -6,10 +6,10 @@ import logging
 import pandas as pd
 
 from flask_cors import CORS
-from user_agents import parse
 from datetime import datetime
 from openpyxl import load_workbook
 from openpyxl.styles import Alignment
+from device_detector import DeviceDetector
 from flask import Flask, request, jsonify, send_from_directory
 
 
@@ -27,20 +27,27 @@ os.makedirs(log_dir, exist_ok=True)
 
 # region Logging
 def get_device_info(user_agent):
-    ua = parse(user_agent)
+    device = DeviceDetector(user_agent).parse()
+
     device_type = "Other"
-    if ua.is_mobile:
+    if device.is_mobile():
         device_type = "Mobile"
-    elif ua.is_tablet:
+    elif device.is_tablet():
         device_type = "Tablet"
-    elif ua.is_pc:
+    elif device.is_desktop():
         device_type = "PC"
 
-    browser_info = f"{ua.browser.family} {ua.browser.version_string}"
-    os_info = f"{ua.os.family} {ua.os.version_string}"
-    device_model = ua.device.model if ua.device.model else "Unknown"
+    browser_info = f"{device.client_name()} {device.client_version()}"
+    os_info = f"{device.os_name()} {device.os_version()}"
+    device_brand = device.device_brand_name()
+    device_model = device.device_model()
 
-    return device_type, browser_info, os_info, device_model
+    if device_brand and device_model:
+        device_info = f"{device_brand} {device_model}"
+    else:
+        device_info = "Unknown"
+
+    return device_type, browser_info, os_info, device_info
 
 
 def apply_excel_formatting(file_path):

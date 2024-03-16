@@ -277,7 +277,6 @@
             }
 
             #message-list {
-                margin-bottom: calc(var(--form-height));
                 flex-grow: 1;
                 overflow-y: auto;
             }
@@ -371,21 +370,11 @@
 </div>
 
 <script>
-
-
-    function updateFormHeight() {
-        const formHeight = document.getElementById('new-message-form').offsetHeight;
-        document.documentElement.style.setProperty('--form-height', `${formHeight}px`);
-    }
-
     window.onload = function() {
-        updateFormHeight();
         setTimeout(() => {
             window.scrollTo(0, 0);
         }, 100);
     };
-    window.onresize = updateFormHeight;
-
 
     document.querySelectorAll('nav a').forEach(link => {
         link.addEventListener('click', (e) => {
@@ -431,10 +420,6 @@
         const messageText = messageInput.value.trim();
         const messageList = document.getElementById('message-list');
 
-        if (window.innerWidth <= 600) {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
         if (messageText) {
             sendButton.disabled = true;
             messageInput.value = '';
@@ -443,6 +428,8 @@
             userMessageElement.classList.add('message', 'user');
             userMessageElement.innerHTML = `<div class="text">${messageText}</div>`;
             messageList.appendChild(userMessageElement);
+
+            userMessageElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
 
             const loadingElement = document.createElement('div');
             loadingElement.classList.add('loading-spinner');
@@ -464,7 +451,7 @@
                     botMessageElement.innerHTML = `<div class="text">${data.reply}</div>`;
 
                     messageList.replaceChild(botMessageElement, loadingElement);
-                    messageList.scrollTop = messageList.scrollHeight;
+                    botMessageElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
                     sendButton.disabled = false;
                 })
 
@@ -477,7 +464,7 @@
                     errorBotMessageElement.classList.add('message', 'bot');
                     errorBotMessageElement.innerHTML = `<div class="text">Sorry, I'm still in maintenance for a while...</div>`;
                     messageList.appendChild(errorBotMessageElement);
-                    messageList.scrollTop = messageList.scrollHeight;
+                    errorBotMessageElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
                 });
         }
         messageList.scrollTop = messageList.scrollHeight;
