@@ -15,8 +15,8 @@ from flask import Flask, request, jsonify, send_from_directory
 
 # region Metrics
 app = Flask(__name__)
-# CORS(app, supports_credentials=True)
-CORS(app, origins=[r"https://neuronalnid\.com(:\d+)?"])
+CORS(app, supports_credentials=True)
+# CORS(app, origins=[r"https://neuronalnid\.com(:\d+)?"])
 
 logging.basicConfig(level=logging.INFO)
 openai.api_key = os.getenv('OPENAI_API_KEY')
