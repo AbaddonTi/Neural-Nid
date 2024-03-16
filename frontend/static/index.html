@@ -438,7 +438,10 @@
             userMessageElement.classList.add('message', 'user');
             userMessageElement.innerHTML = `<div class="text">${messageText}</div>`;
             messageList.appendChild(userMessageElement);
-            userMessageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const messageListRect = messageList.getBoundingClientRect();
+            const userMessageRect = userMessageElement.getBoundingClientRect();
+            const scrollOffset = userMessageRect.top - messageListRect.top + messageList.scrollTop;
+            messageList.scrollTo({ top: scrollOffset, behavior: 'smooth' });
 
             setTimeout(() => {
                 window.scrollTo({
@@ -493,7 +496,7 @@
                     errorBotMessageElement.classList.add('message', 'bot');
                     errorBotMessageElement.innerHTML = `<div class="text">Sorry, I'm still in maintenance for a while...</div>`;
                     messageList.appendChild(errorBotMessageElement);
-                    errorBotMessageElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                    errorBotMessageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 });
         }
     });
