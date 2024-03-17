@@ -1,10 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Votre Guide</title>
+
+
     <link rel="icon" type="image/png" sizes="512x512" href="https://cdn.discordapp.com/attachments/1072482277784825907/1218525956348710962/icon-base_512x512.png?ex=6607fbbb&is=65f586bb&hm=94cc4a7e3227cd935edf4cdb6b1ba4d5abeb7d872d203247b4646f771941012e&">
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.discordapp.com/attachments/1072482277784825907/1218978699706372157/icon-base_180x180.png?ex=6609a161&is=65f72c61&hm=f0a0b5215eaefc104007d24e1e49d9c9adea5e4ea68e1612aeea7ae2d22e4ba6&">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+    <link rel="manifest" href="/manifest.json">
+
+
     <style>
         body {
             padding-top: 75px;
@@ -73,7 +86,7 @@
 
         #send-message-button {
 
-            background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1218495003769438269/icon-send.png?ex=6607dee7&is=65f569e7&hm=204110941c95d043baf5fa6b0f8f056458437168b68d7985abb06da995f1c3d5&');
+            background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1219042140810907678/icon_send.png?ex=6609dc77&is=65f76777&hm=b86a07d039451fbf4c5fe1459a08f17a18779adaa52d6ca0d763ed9966e8d52c&');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -367,10 +380,29 @@
 
 <div id="contacts" class="page-content">
     <h2>Contacts</h2>
-    <p>Pour toute question veuillez nous contacter par email neuronalnid@gmail.com </p>
+    <p>Pour toute question veuillez nous contacter par email <span id="emailToCopy" style="cursor: pointer; color: rgba(41,213,218,0.8); font-weight: bold;">neuronalnid@gmail.com</span></p>
 </div>
 
 <script>
+    document.getElementById('emailToCopy').onclick = function() {
+        var email = 'neuronalnid@gmail.com';
+        var el = document.createElement('textarea');
+        el.value = email;
+        el.setAttribute('readonly', '');
+        el.style.position = 'absolute';
+        el.style.left = '-9999px';
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+
+        // Спецэффект уведомления о копировании
+        var emailElement = document.getElementById('emailToCopy');
+        emailElement.style.color = '#21c0c5'; // Зеленый цвет как индикатор успеха
+        setTimeout(function() {
+            emailElement.style.color = 'rgba(41,213,218,0.8)'; // Возвращаем исходный цвет через 1500 мс
+        }, 150);
+    };
 
     function updateFormHeight() {
         const formHeight = document.getElementById('new-message-form').offsetHeight;

@@ -1,0 +1,16 @@
+{
+  "short_name": "nNid",
+  "name": "neuronalnid.com",
+  "icons": [
+    {
+      "src": "https://cdn.discordapp.com/attachments/1072482277784825907/1218525956348710962/icon-base_512x512.png?ex=6607fbbb&is=65f586bb&hm=94cc4a7e3227cd935edf4cdb6b1ba4d5abeb7d872d203247b4646f771941012e&",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#FFFFFF",
+  "background_color": "#FFFFFF"
+}
