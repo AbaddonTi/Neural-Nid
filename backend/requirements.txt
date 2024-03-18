@@ -1,8 +1,8 @@
-Flask
-Flask-CORS
-user-agents
+Flask==3.0.2
+Flask-CORS==4.0.0
+user-agents==2.2.0
 openai==0.28
-pandas
-openpyxl
-pytz
-device-detector
+pandas==2.2.1
+openpyxl==3.1.2
+pytz==2024.1
+device-detector==5.0.1

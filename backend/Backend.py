@@ -32,7 +32,7 @@ def get_device_info(user_agent):
     device_type = "Other"
     if device.is_mobile():
         device_type = "Mobile"
-    elif device.is_tablet():
+    elif device.isTablet():
         device_type = "Tablet"
     elif device.is_desktop():
         device_type = "PC"

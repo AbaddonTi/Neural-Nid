@@ -1,0 +1,304 @@
+body {
+    padding-top: 75px;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f0f2f5;
+}
+#chat-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    margin: auto;
+    margin-bottom: 100px;
+    min-height: 80vh;
+    max-width: 600px;
+    height: 85vh;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    background-size: cover;
+    background-position: center;
+    background-color: rgba(240, 242, 245, 0.1);
+    backdrop-filter: blur(2px);
+}
+
+
+#message-list {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    overflow-y: auto;
+    flex-grow: 1;
+    min-height: 70%;
+}
+
+#new-message-form {
+    margin-top: auto;
+    display: flex;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(2px);
+}
+
+#new-message-input {
+    flex-grow: 1;
+    padding: 10px;
+    margin-right: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    transition: border-color 0.3s ease;
+}
+
+#new-message-input:focus {
+    border-color: rgba(0, 123, 255, 0.5);
+}
+
+#new-message-input::placeholder {
+    color: white;
+    opacity: 0.9;
+}
+
+#send-message-button {
+
+    background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1219042140810907678/icon_send.png?ex=6609dc77&is=65f76777&hm=b86a07d039451fbf4c5fe1459a08f17a18779adaa52d6ca0d763ed9966e8d52c&');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 40px;
+    height: 40px;
+    padding: 10px 20px;
+    background-color: rgba(18, 147, 147, 0.0);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    outline: none;
+}
+
+#send-message-button:hover, #send-message-button:focus {
+    background-color: rgba(21, 208, 218, 0.5);
+}
+
+.message {
+    display: flex;
+    width: fit-content;
+    max-width: 80%;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 15px;
+}
+.sender {
+    font-weight: bold;
+}
+.text, .reply {
+    color: white;
+    margin-top: 5px;
+    white-space: pre-wrap;
+}
+
+.message.user {
+    background-color: rgba(86, 141, 139, 0.8);
+    margin-left: auto;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 20px;
+}
+
+.message.bot {
+    background-color: rgba(133, 136, 119, 0.8);
+    margin-right: auto;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 20px;
+}
+
+.loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 2s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+nav {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    background-color: rgba(240, 242, 245, 0.1);
+    backdrop-filter: blur(5px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+nav a {
+    text-decoration: none;
+    margin: 0 15px;
+    color: white;
+    padding: 10px 15px;
+    background-color: rgba(18, 147, 147, 0.5);
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+}
+
+nav a:hover {
+    background-color: rgba(21, 208, 218, 0.6);
+}
+
+.page-content {
+    margin: auto;
+    margin-bottom: 100px;
+    min-height: calc(100vh - 100px);
+    max-width: 600px;
+    color: white;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-size: cover;
+    background-position: center;
+}
+
+#background-image-1 {
+    background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1218495002909610084/background-image-1.jpg?ex=6607dee7&is=65f569e7&hm=e2f1fe6c4d8e28f3de3c457e404f39f519162e77a56eda8aee73b8a1dfed7c63&');
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(150, 112, 121, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(150, 112, 121, 0.5);
+    border-radius: 6px;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.5) rgba(255, 255, 255, 0.2);
+}
+
+
+.page-content h2, .page-content p {
+    color: white;
+    text-shadow: 0 0 8px rgba(0, 0, 0),
+        /*0 0 20px rgba(0, 0, 0), */
+    0 0 30px rgba(0, 0, 0);
+}
+
+.team-member {
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+    width: 100%;
+}
+
+.avatar {
+    width: 15vw;
+    height: 15vw;
+    border-radius: 5%;
+    object-fit: cover;
+    margin-right: 20px;
+}
+
+.member-info {
+    flex: 1;
+    text-align: left;
+}
+
+.member-info h3, .member-info p {
+    color: white;
+    text-shadow: 0 0 8px rgba(0, 0, 0),
+        /*0 0 20px rgba(0, 0, 0), */
+    0 0 30px rgba(0, 0, 0);
+    margin: 0;
+    line-height: 1.5;
+}
+
+
+.member-info p {
+    line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        padding-top: 75px;
+    }
+    #chat-container {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        overflow: hidden;
+    }
+
+    #message-list {
+        margin-bottom: calc(var(--form-height));
+        flex-grow: 1;
+        overflow-y: auto;
+    }
+
+    #new-message-form {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        box-sizing: border-box;
+        padding: 8px;
+        padding-bottom: calc(8px + env(safe-area-inset-bottom));
+        background-color: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(2px);
+    }
+
+    #new-message-input, #send-message-button {
+        padding: 8px 15px;
+    }
+    #send-message-button {
+        font-size: 14px;
+    }
+    nav a {
+        margin: 0 10px;
+        padding: 5px 10px;
+        font-size: 14px;
+    }
+    .team-member .avatar {
+        width: 20vw;
+        height: 20vw;
+    }
+}

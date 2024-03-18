@@ -15,334 +15,34 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
 
-
-    <style>
-        body {
-            padding-top: 75px;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background-color: #f0f2f5;
-        }
-        #chat-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 100%;
-            margin: auto;
-            margin-bottom: 100px;
-            min-height: 80vh;
-            max-width: 600px;
-            height: 85vh;
-            background-color: #fff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            background-size: cover;
-            background-position: center;
-            background-color: rgba(240, 242, 245, 0.1);
-            backdrop-filter: blur(2px);
-        }
-
-
-        #message-list {
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            overflow-y: auto;
-            flex-grow: 1;
-            min-height: 70%;
-        }
-
-        #new-message-form {
-            margin-top: auto;
-            display: flex;
-            padding: 10px;
-            background-color: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(2px);
-        }
-
-        #new-message-input {
-            flex-grow: 1;
-            padding: 10px;
-            margin-right: 10px;
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            border-radius: 20px;
-            outline: none;
-            background-color: rgba(255, 255, 255, 0.2);
-            color: white;
-            transition: border-color 0.3s ease;
-        }
-
-        #new-message-input:focus {
-            border-color: rgba(0, 123, 255, 0.5);
-        }
-
-        #new-message-input::placeholder {
-            color: white;
-            opacity: 0.9;
-        }
-
-        #send-message-button {
-
-            background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1219042140810907678/icon_send.png?ex=6609dc77&is=65f76777&hm=b86a07d039451fbf4c5fe1459a08f17a18779adaa52d6ca0d763ed9966e8d52c&');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            width: 40px;
-            height: 40px;
-            padding: 10px 20px;
-            background-color: rgba(18, 147, 147, 0.0);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-            outline: none;
-        }
-
-        #send-message-button:hover, #send-message-button:focus {
-            background-color: rgba(21, 208, 218, 0.5);
-        }
-
-        .message {
-            display: flex;
-            width: fit-content;
-            max-width: 80%;
-            margin-bottom: 15px;
-            padding: 10px;
-            border-radius: 15px;
-        }
-        .sender {
-            font-weight: bold;
-        }
-        .text, .reply {
-            color: white;
-            margin-top: 5px;
-            white-space: pre-wrap;
-        }
-
-        .message.user {
-            background-color: rgba(86, 141, 139, 0.8);
-            margin-left: auto;
-            border-bottom-right-radius: 0;
-            border-bottom-left-radius: 20px;
-        }
-
-        .message.bot {
-            background-color: rgba(133, 136, 119, 0.8);
-            margin-right: auto;
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 20px;
-        }
-
-        .loading-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 2s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        nav {
-            width: 100%;
-            position: fixed;
-            top: 0;
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            padding: 10px 0;
-            background-color: rgba(240, 242, 245, 0.1);
-            backdrop-filter: blur(5px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
-        nav a {
-            text-decoration: none;
-            margin: 0 15px;
-            color: white;
-            padding: 10px 15px;
-            background-color: rgba(18, 147, 147, 0.5);
-            border-radius: 20px;
-            transition: background-color 0.3s ease;
-        }
-
-        nav a:hover {
-            background-color: rgba(21, 208, 218, 0.6);
-        }
-
-        .page-content {
-            margin: auto;
-            margin-bottom: 100px;
-            min-height: calc(100vh - 100px);
-            max-width: 600px;
-            color: white;
-            width: 100%;
-            padding: 20px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            text-align: center;
-        }
-
-        .background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background-size: cover;
-            background-position: center;
-        }
-
-        #background-image-1 {
-            background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1218495002909610084/background-image-1.jpg?ex=6607dee7&is=65f569e7&hm=e2f1fe6c4d8e28f3de3c457e404f39f519162e77a56eda8aee73b8a1dfed7c63&');
-        }
-
-        ::-webkit-scrollbar {
-            width: 12px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(150, 112, 121, 0.5);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background-color: rgba(150, 112, 121, 0.5);
-            border-radius: 6px;
-        }
-
-        * {
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.5) rgba(255, 255, 255, 0.2);
-        }
-
-
-        .page-content h2, .page-content p {
-            color: white;
-            text-shadow: 0 0 8px rgba(0, 0, 0),
-                /*0 0 20px rgba(0, 0, 0), */
-            0 0 30px rgba(0, 0, 0);
-        }
-
-        .team-member {
-            display: flex;
-            align-items: center;
-            margin-bottom: 40px;
-            width: 100%;
-        }
-
-        .avatar {
-            width: 15vw;
-            height: 15vw;
-            border-radius: 5%;
-            object-fit: cover;
-            margin-right: 20px;
-        }
-
-        .member-info {
-            flex: 1;
-            text-align: left;
-        }
-
-        .member-info h3, .member-info p {
-            color: white;
-            text-shadow: 0 0 8px rgba(0, 0, 0),
-                /*0 0 20px rgba(0, 0, 0), */
-            0 0 30px rgba(0, 0, 0);
-            margin: 0;
-            line-height: 1.5;
-        }
-
-
-        .member-info p {
-            line-height: 1.5;
-        }
-
-        @media (max-width: 600px) {
-            body, html {
-                height: 100%;
-                margin: 0;
-                padding: 0;
-            }
-
-            body {
-                display: flex;
-                flex-direction: column;
-                height: 100vh;
-                padding-top: 75px;
-            }
-            #chat-container {
-                display: flex;
-                flex-direction: column;
-                flex-grow: 1;
-                overflow: hidden;
-            }
-
-            #message-list {
-                margin-bottom: calc(var(--form-height));
-                flex-grow: 1;
-                overflow-y: auto;
-            }
-
-            #new-message-form {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                box-sizing: border-box;
-                padding: 8px;
-                padding-bottom: calc(8px + env(safe-area-inset-bottom));
-                background-color: rgba(255, 255, 255, 0.2);
-                backdrop-filter: blur(2px);
-            }
-
-            #new-message-input, #send-message-button {
-                padding: 8px 15px;
-            }
-            #send-message-button {
-                font-size: 14px;
-            }
-            nav a {
-                margin: 0 10px;
-                padding: 5px 10px;
-                font-size: 14px;
-            }
-            .team-member .avatar {
-                width: 20vw;
-                height: 20vw;
-            }
-        }
-    </style>
 </head>
 <body>
+
+
 <div id="background-image-1" class="background"></div>
+
+
 <nav>
     <a href="#chat-container" id="chat-link">Chat</a>
     <a href="#teams" id="teams-link">Équipe</a>
     <a href="#about-us" id="about-link">Nous</a>
     <a href="#contacts" id="contact-link">Contacts</a>
 </nav>
+
+
 <div id="chat-container">
     <div id="message-list">
     </div>
     <form id="new-message-form">
         <input type="text" id="new-message-input" placeholder="Posez vos questions ici..." required>
         <button type="submit" id="send-message-button"></button>
-
-
     </form>
 </div>
+
+
 <div id="teams" class="page-content">
     <h2>Équipe</h2>
     <div class="team-member">
@@ -352,6 +52,7 @@
             <p>Anastasia a consacré une grande partie de sa vie au domaine de la gestion des ventes et de la communication avec les personnes. <br>La génération d'idées, le prompt engineering et la promotion de nos projets neuronaux sont ses tâches au sein de l'entreprise.</p>
         </div>
     </div>
+
     <div class="team-member">
         <img src="https://cdn.discordapp.com/attachments/1072482277784825907/1218495003467190276/grigorii-avatar.jpg?ex=6607dee7&is=65f569e7&hm=39e00801645831256e9d06def621ab150c045af6bf7ab28008147e1792bf863b&" alt="Grigori" class="avatar">
         <div class="member-info">
@@ -360,6 +61,7 @@
         </div>
     </div>
 </div>
+
 
 <div id="about-us" class="page-content">
     <h2>À propos de nous</h2>
@@ -378,160 +80,15 @@
         Ensemble, nous créons bien plus que de simples produits – nous façonnons l'avenir !  </p>
 </div>
 
+
 <div id="contacts" class="page-content">
     <h2>Contacts</h2>
     <p>Pour toute question veuillez nous contacter par email <span id="emailToCopy" style="cursor: pointer; color: rgba(41,213,218,0.8); font-weight: bold;">neuronalnid@gmail.com</span></p>
 </div>
 
-<script>
-    document.getElementById('emailToCopy').onclick = function() {
-        var email = 'neuronalnid@gmail.com';
-        var el = document.createElement('textarea');
-        el.value = email;
-        el.setAttribute('readonly', '');
-        el.style.position = 'absolute';
-        el.style.left = '-9999px';
-        document.body.appendChild(el);
-        el.select();
-        document.execCommand('copy');
-        document.body.removeChild(el);
 
-        // Спецэффект уведомления о копировании
-        var emailElement = document.getElementById('emailToCopy');
-        emailElement.style.color = '#21c0c5'; // Зеленый цвет как индикатор успеха
-        setTimeout(function() {
-            emailElement.style.color = 'rgba(41,213,218,0.8)'; // Возвращаем исходный цвет через 1500 мс
-        }, 150);
-    };
-
-    function updateFormHeight() {
-        const formHeight = document.getElementById('new-message-form').offsetHeight;
-        document.documentElement.style.setProperty('--form-height', `${formHeight}px`);
-    }
-
-    window.onload = function() {
-        updateFormHeight();
-        setTimeout(() => {
-            window.scrollTo(0, 0);
-        }, 100);
-    };
-    window.onresize = updateFormHeight;
+<script src="script.js"></script>
 
 
-    document.querySelectorAll('nav a').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const targetId = e.target.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
-
-            const offsetTop = targetElement.offsetTop - 75;
-
-            window.scrollTo({
-                top: offsetTop,
-                behavior: 'smooth'
-            });
-        });
-    });
-
-    const links = {
-        'chat-link': 'chat-container',
-        'teams-link': 'teams',
-        'about-link': 'about-us',
-        'contact-link': 'contacts',
-    };
-
-    function showContent(id) {
-        Object.values(links).forEach((value) => {
-            document.getElementById(value).classList.add('hidden');
-        });
-        document.getElementById(id).classList.remove('hidden');
-    }
-
-    document.querySelectorAll('nav a').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const contentId = links[e.target.id];
-            showContent(contentId);
-        });
-    });
-
-    document.getElementById('new-message-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const messageInput = document.getElementById('new-message-input');
-        const sendButton = document.getElementById('send-message-button');
-        const messageText = messageInput.value.trim();
-        const messageList = document.getElementById('message-list');
-
-        if (messageText) {
-            sendButton.disabled = true;
-            messageInput.value = '';
-
-            const userMessageElement = document.createElement('div');
-            userMessageElement.classList.add('message', 'user');
-            userMessageElement.innerHTML = `<div class="text">${messageText}</div>`;
-            messageList.appendChild(userMessageElement);
-            const messageListRect = messageList.getBoundingClientRect();
-            const userMessageRect = userMessageElement.getBoundingClientRect();
-            const scrollOffset = userMessageRect.top - messageListRect.top + messageList.scrollTop;
-            messageList.scrollTo({ top: scrollOffset, behavior: 'smooth' });
-
-            setTimeout(() => {
-                window.scrollTo({
-                    top: messageList.offsetTop,
-                    behavior: 'smooth'
-                });
-            }, 100);
-
-            const loadingElement = document.createElement('div');
-            loadingElement.classList.add('loading-spinner');
-            messageList.appendChild(loadingElement);
-
-
-            fetch('https://neuronalnid.com/api/send_message', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({message: messageText}),
-            })
-
-                .then(response => response.json())
-                .then(data => {
-
-                    messageList.removeChild(loadingElement);
-
-                    const botMessageElement = document.createElement('div');
-                    botMessageElement.classList.add('message', 'bot');
-                    botMessageElement.innerHTML = `<div class="text">${data.reply}</div>`;
-
-                    messageList.appendChild(botMessageElement);
-                    const messageListRect = messageList.getBoundingClientRect();
-                    const messageRect = botMessageElement.getBoundingClientRect();
-                    const scrollOffset = messageRect.top - messageListRect.top + messageList.scrollTop;
-                    messageList.scrollTo({ top: scrollOffset, behavior: 'smooth' });
-                    const lastUserMessage = messageList.querySelector('.message.user:last-of-type');
-                    if (lastUserMessage) {
-                        setTimeout(() => {
-                            lastUserMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                        }, 100);
-                    }
-
-                    sendButton.disabled = false;
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                    messageList.removeChild(loadingElement);
-                    sendButton.disabled = false;
-
-
-                    const errorBotMessageElement = document.createElement('div');
-                    errorBotMessageElement.classList.add('message', 'bot');
-                    errorBotMessageElement.innerHTML = `<div class="text">Sorry, I'm still in maintenance for a while...</div>`;
-                    messageList.appendChild(errorBotMessageElement);
-                    errorBotMessageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                });
-        }
-    });
-</script>
 </body>
 </html>
