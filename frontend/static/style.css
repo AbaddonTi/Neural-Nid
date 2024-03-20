@@ -255,6 +255,13 @@ nav a:hover {
 }
 
 @media (max-width: 600px) {
+
+    .background {
+        background-attachment: scroll; 
+        background-size: cover;
+        background-position: center center;
+
+
     body, html {
         height: 100%;
         margin: 0;
