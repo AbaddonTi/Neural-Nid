@@ -58,6 +58,7 @@ html {
     background-color: rgba(255, 255, 255, 0.2);
     color: white;
     transition: border-color 0.3s ease;
+    font-size: 16px;
 }
 
 #new-message-input:focus {
@@ -188,6 +189,7 @@ nav a:hover {
     z-index: -1;
     background-size: cover;
     background-position: center;
+    background-attachment: fixed;
 }
 
 #background-image-1 {
