@@ -1,4 +1,16 @@
 
+
+// region DOMContentLoaded
+document.addEventListener("DOMContentLoaded", function() {
+    var form = document.getElementById('new-message-form');
+    if (/iPhone/i.test(navigator.userAgent)) {
+        form.style.backgroundColor = "rgba(255, 255, 255, 1.0)";
+    }
+});
+// endregion DOMContentLoaded
+
+
+// region Copy Email Functionality
 var notificationActive = false;
 
 document.getElementById('emailToCopy').onclick = function() {
@@ -18,15 +30,12 @@ document.getElementById('emailToCopy').onclick = function() {
     document.execCommand('copy');
     document.body.removeChild(el);
 
-    // Изменение цвета email
     var emailElement = document.getElementById('emailToCopy');
     emailElement.style.color = '#21c0c5';
     setTimeout(function() {
         emailElement.style.color = 'rgba(41,213,218,0.8)';
     }, 200);
 
-
-    // Показ и скрытие уведомления
     var notification = document.getElementById('copyNotification');
     notification.style.display = 'block';
     notification.style.opacity = '1';
@@ -38,7 +47,10 @@ document.getElementById('emailToCopy').onclick = function() {
         }, 500);
     }, 300);
 };
+// endregion Copy Email Functionality
 
+
+// region Form Height Adjustment
 function updateFormHeight() {
     const formHeight = document.getElementById('new-message-form').offsetHeight;
     document.documentElement.style.setProperty('--form-height', `${formHeight}px`);
@@ -51,8 +63,10 @@ window.onload = function() {
     }, 100);
 };
 window.onresize = updateFormHeight;
+// endregion Form Height Adjustment
 
 
+// region Smooth Scrolling for Navigation Links
 document.querySelectorAll('nav a').forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
@@ -67,7 +81,10 @@ document.querySelectorAll('nav a').forEach(link => {
         });
     });
 });
+// endregion Smooth Scrolling for Navigation Links
 
+
+// region Message Submission and Response Handling
 const links = {
     'chat-link': 'chat-container',
     'teams-link': 'teams',
@@ -152,3 +169,4 @@ document.getElementById('new-message-form').addEventListener('submit', function(
             });
     }
 });
+// endregion Message Submission and Response Handling
