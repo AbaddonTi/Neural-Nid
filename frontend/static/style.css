@@ -65,7 +65,7 @@ body {
 
 #send-message-button {
 
-    background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1219042140810907678/icon_send.png?ex=6609dc77&is=65f76777&hm=b86a07d039451fbf4c5fe1459a08f17a18779adaa52d6ca0d763ed9966e8d52c&');
+    background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1219743955747471370/icon_send_2.png?ex=660c6a14&is=65f9f514&hm=03682a8469e409701f20c8e7f93733f2351b10dc92f213ddf85794f245d746c7&');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -209,9 +209,9 @@ nav a:hover {
 
 .page-content h2, .page-content p {
     color: white;
-    text-shadow: 0 0 8px rgba(0, 0, 0),
-        /*0 0 20px rgba(0, 0, 0), */
-    0 0 30px rgba(0, 0, 0);
+    /*text-shadow: 0 0 8px rgba(0, 0, 0),*/
+    /*    !*0 0 20px rgba(0, 0, 0), *!*/
+    /*0 0 30px rgba(0, 0, 0);*/
 }
 
 .team-member {
@@ -236,9 +236,9 @@ nav a:hover {
 
 .member-info h3, .member-info p {
     color: white;
-    text-shadow: 0 0 8px rgba(0, 0, 0),
-        /*0 0 20px rgba(0, 0, 0), */
-    0 0 30px rgba(0, 0, 0);
+    /*text-shadow: 0 0 8px rgba(0, 0, 0),*/
+    /*    !*0 0 20px rgba(0, 0, 0), *!*/
+    /*0 0 30px rgba(0, 0, 0);*/
     margin: 0;
     line-height: 1.5;
 }

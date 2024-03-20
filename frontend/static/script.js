@@ -54,21 +54,6 @@ const links = {
     'contact-link': 'contacts',
 };
 
-// function showContent(id) {
-//     Object.values(links).forEach((value) => {
-//         document.getElementById(value).classList.add('hidden');
-//     });
-//     document.getElementById(id).classList.remove('hidden');
-// }
-//
-// document.querySelectorAll('nav a').forEach(link => {
-//     link.addEventListener('click', (e) => {
-//         e.preventDefault();
-//         const contentId = links[e.target.id];
-//         showContent(contentId);
-//     });
-// });
-
 document.getElementById('new-message-form').addEventListener('submit', function(event) {
     event.preventDefault();
     const messageInput = document.getElementById('new-message-input');
