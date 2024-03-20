@@ -1,3 +1,31 @@
+// region Temporary crutch for old devices
+document.addEventListener('DOMContentLoaded', function() {
+    var parser = new UAParser();
+    var result = parser.getResult();
+    var osName = result.os.name;
+    var osVersion = parseFloat(result.os.version);
+
+    function hideSections() {
+        var sectionsToHide = ['teams', 'about-us', 'contacts'];
+
+        sectionsToHide.forEach(function(sectionId) {
+            var section = document.getElementById(sectionId);
+            if (section) {
+                section.style.display = 'none';
+            }
+        });
+
+        // Скрыть навигацию, если нужно
+        var nav = document.querySelector('nav');
+        if (nav) {
+            nav.style.display = 'none';
+        }
+    }
+    if ((osName === 'iOS' && osVersion < 14) || (osName === 'Android' && osVersion < 10)) {
+        hideSections();
+    }
+});
+// endregion Temporary crutch for old devices
 
 
 // region Copy Email Functionality
