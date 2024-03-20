@@ -36,7 +36,7 @@ def apply_excel_formatting(file_path):
     wb.save(file_path)
 
 
-def log_to_excel(user_ip, user_question, ai_answer, device_info, browser_info, os_info, device_model):
+def log_to_excel(user_ip, user_question, ai_answer, device_info, browser_info, os_info):
     tz = pytz.timezone('Europe/Paris')
     now = datetime.now(tz)
     latest_file = None
@@ -60,7 +60,6 @@ def log_to_excel(user_ip, user_question, ai_answer, device_info, browser_info, o
         'Device': [device_info],
         'Browser': [browser_info],
         'OS': [os_info],
-        'Model': [device_model]
     })
 
     df = pd.concat([df, new_row], ignore_index=True)
@@ -92,7 +91,7 @@ def send_message():
     device_info = data.get('device', 'Unknown device')
 
     openai_response = get_reply_from_openai(user_message)
-    log_to_excel(user_ip, user_message, openai_response, device_info, browser_info, os_info, device_info)
+    log_to_excel(user_ip, user_message, openai_response, device_info, browser_info, os_info)
     response = {"reply": openai_response}
     return jsonify(response)
 # endregion
