@@ -14,14 +14,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 section.style.display = 'none';
             }
         });
-
-        // Скрыть навигацию, если нужно
         var nav = document.querySelector('nav');
         if (nav) {
             nav.style.display = 'none';
         }
     }
-    if ((osName === 'iOS' && osVersion < 14) || (osName === 'Android' && osVersion < 10)) {
+    if ((osName === 'iOS' && osVersion < 15) || (osName === 'Android' && osVersion < 10)) {
         hideSections();
     }
 });
@@ -113,7 +111,7 @@ document.getElementById('new-message-form').addEventListener('submit', function(
     if (messageText) {
 
         var parser = new UAParser();
-        var result = parser.getResult(); // Получение результатов
+        var result = parser.getResult();
 
         const userInfo = {
             message: messageText,
