@@ -1,22 +1,26 @@
 
 
 // region DOMContentLoaded
-document.addEventListener("DOMContentLoaded", function() {
-    if (/iPhone/i.test(navigator.userAgent)) {
-        const form = document.getElementById('new-message-form');
-        window.addEventListener('scroll', () => {
-            const shouldFixForm = window.innerHeight + window.scrollY < document.body.offsetHeight;
-
-            if (shouldFixForm) {
-                form.style.position = 'absolute';
-                form.style.bottom = `${window.scrollY}px`;
-            } else {
-                form.style.position = 'fixed';
-                form.style.bottom = '0px';
-            }
-        });
-    }
-});
+// document.addEventListener("DOMContentLoaded", function() {
+//     var form = document.getElementById('new-message-form');
+//     var input = document.getElementById('new-message-input');
+//
+//     if (/iPhone/i.test(navigator.userAgent)) {
+//         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+//
+//
+//             form.style.backgroundColor = "rgb(55,55,55)";
+//             input.style.backgroundColor = "rgb(77,77,77)";
+//             input.style.color = "rgb(255,255,255)";
+//             input.style.borderColor = "rgb(90,90,90)";
+//         } else {
+//             form.style.backgroundColor = "rgb(239,240,245)";
+//             input.style.backgroundColor = "rgb(255,255,255)";
+//             input.style.color = "rgb(0,0,0)";
+//             input.style.borderColor = "rgb(200,200,200)";
+//         }
+//     }
+// });
 // endregion DOMContentLoaded
 
 
