@@ -79,7 +79,6 @@ html {
 }
 
 #send-message-button {
-
     background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1219743955747471370/icon_send_2.png?ex=660c6a14&is=65f9f514&hm=03682a8469e409701f20c8e7f93733f2351b10dc92f213ddf85794f245d746c7&');
     background-size: cover;
     background-position: center;
@@ -361,7 +360,6 @@ nav a:hover {
         background-attachment: scroll;
     }
 
-
     #chat-container {
         display: flex;
         flex-direction: column;
@@ -376,7 +374,7 @@ nav a:hover {
     }
 
     #new-message-form {
-        bottom: 0;
+        bottom: 20px;
         left: 0;
         right: 0;
         box-sizing: border-box;

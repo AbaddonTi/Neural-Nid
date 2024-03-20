@@ -1,26 +1,12 @@
 
 
 // region DOMContentLoaded
-// document.addEventListener("DOMContentLoaded", function() {
-//     var form = document.getElementById('new-message-form');
-//     var input = document.getElementById('new-message-input');
-//
-//     if (/iPhone/i.test(navigator.userAgent)) {
-//         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-//
-//
-//             form.style.backgroundColor = "rgb(55,55,55)";
-//             input.style.backgroundColor = "rgb(77,77,77)";
-//             input.style.color = "rgb(255,255,255)";
-//             input.style.borderColor = "rgb(90,90,90)";
-//         } else {
-//             form.style.backgroundColor = "rgb(239,240,245)";
-//             input.style.backgroundColor = "rgb(255,255,255)";
-//             input.style.color = "rgb(0,0,0)";
-//             input.style.borderColor = "rgb(200,200,200)";
-//         }
-//     }
-// });
+document.addEventListener("DOMContentLoaded", function() {
+    if (/iPhone/i.test(navigator.userAgent)) {
+        var form = document.getElementById('new-message-form');
+        form.style.paddingBottom = 'calc(30px + env(safe-area-inset-bottom))';
+    }
+});
 // endregion DOMContentLoaded
 
 
