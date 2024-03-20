@@ -281,6 +281,11 @@ nav a:hover {
         scroll-behavior: smooth;
     }
 
+    .page-content {
+        min-height: auto;
+        height: auto;
+    }
+    
     .background {
         position: fixed;
         top: 0;
