@@ -189,7 +189,7 @@ nav a:hover {
     z-index: -1;
     background-size: cover;
     background-position: center;
-    background-attachment: fixed;
+    background-attachment: scroll;
 }
 
 #background-image-1 {
@@ -257,6 +257,11 @@ nav a:hover {
 }
 
 @media (max-width: 600px) {
+
+    :root {
+        --viewport-height: 100vh;
+    }
+
     body, html {
         height: 100%;
         margin: 0;
@@ -274,6 +279,19 @@ nav a:hover {
 
     html {
         scroll-behavior: smooth;
+    }
+
+    .background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: var(--viewport-height);
+        background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1219910991786147850/background-image-2mob-min_1.jpg?ex=660d05a5&is=65fa90a5&hm=687dfa20e6d3e972ef4cd5046561b4392bf5efa2f1d6568adf9c11be8f9151dc&');
+        background-size: cover;
+        background-position: center;
+        background-color: #191d20;
+        background-attachment: scroll;
     }
 
 
