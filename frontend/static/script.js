@@ -1,15 +1,5 @@
 
 
-// region DOMContentLoaded
-document.addEventListener("DOMContentLoaded", function() {
-    if (/iPhone/i.test(navigator.userAgent)) {
-        var form = document.getElementById('new-message-form');
-        form.style.paddingBottom = 'calc(30px + env(safe-area-inset-bottom))';
-    }
-});
-// endregion DOMContentLoaded
-
-
 // region Copy Email Functionality
 var notificationActive = false;
 
@@ -50,20 +40,13 @@ document.getElementById('emailToCopy').onclick = function() {
 // endregion Copy Email Functionality
 
 
-// region Form Height Adjustment
-function updateFormHeight() {
-    const formHeight = document.getElementById('new-message-form').offsetHeight;
-    document.documentElement.style.setProperty('--form-height', `${formHeight}px`);
-}
-
+// region Start Scroll
 window.onload = function() {
-    updateFormHeight();
     setTimeout(() => {
         window.scrollTo(0, 0);
     }, 100);
 };
-window.onresize = updateFormHeight;
-// endregion Form Height Adjustment
+// endregion Start Scroll
 
 
 // region Smooth Scrolling for Navigation Links

@@ -368,18 +368,16 @@ nav a:hover {
     }
 
     #message-list {
-        margin-bottom: calc(var(--form-height));
         flex-grow: 1;
         overflow-y: auto;
     }
 
     #new-message-form {
-        bottom: 20px;
+        /*bottom: 20px;*/
         left: 0;
         right: 0;
         box-sizing: border-box;
-        padding: 8px;
-        padding-bottom: calc(8px + env(safe-area-inset-bottom));
+        margin-bottom: 20px;
         background-color: rgba(255, 255, 255, 0.2);
         backdrop-filter: blur(2px);
     }
