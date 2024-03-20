@@ -3,8 +3,16 @@
 // region DOMContentLoaded
 document.addEventListener("DOMContentLoaded", function() {
     var form = document.getElementById('new-message-form');
+    var input = document.getElementById('new-message-input');
     if (/iPhone/i.test(navigator.userAgent)) {
-        form.style.backgroundColor = "rgba(255, 255, 255, 1.0)";
+
+        form.style.backgroundColor = "rgb(239,240,245)";
+
+        input.style.backgroundColor = "rgb(28,30,33)";
+
+        input.style.color = "rgb(255,255,255)";
+
+        input.style.borderColor = "rgb(200,200,200)";
     }
 });
 // endregion DOMContentLoaded
