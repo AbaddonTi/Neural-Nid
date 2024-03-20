@@ -83,6 +83,17 @@ document.getElementById('new-message-form').addEventListener('submit', function(
     const messageList = document.getElementById('message-list');
 
     if (messageText) {
+
+        var parser = new UAParser();
+        var result = parser.getResult(); // Получение результатов
+
+        const userInfo = {
+            message: messageText,
+            browser: `${result.browser.name} ${result.browser.version}`,
+            os: `${result.os.name} ${result.os.version}`,
+            device: result.device.model ? `${result.device.vendor} ${result.device.model}` : 'Unknown device'
+        };
+
         sendButton.disabled = true;
         messageInput.value = '';
 
@@ -112,7 +123,7 @@ document.getElementById('new-message-form').addEventListener('submit', function(
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({message: messageText}),
+            body: JSON.stringify(userInfo),
         })
 
             .then(response => response.json())

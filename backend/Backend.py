@@ -9,7 +9,6 @@ from flask_cors import CORS
 from datetime import datetime
 from openpyxl import load_workbook
 from openpyxl.styles import Alignment
-from device_detector import DeviceDetector
 from flask import Flask, request, jsonify, send_from_directory
 
 
@@ -26,24 +25,6 @@ os.makedirs(log_dir, exist_ok=True)
 
 
 # region Logging
-def get_device_info(user_agent):
-    device = DeviceDetector(user_agent).parse()
-
-    device_type = "Other"
-    if device.is_mobile():
-        device_type = "Mobile"
-    elif device.is_desktop():
-        device_type = "PC"
-
-    browser_info = f"{device.client_name()} {device.client_version()}"
-    os_info = f"{device.os_name()} {device.os_version()}"
-    device_brand = device.device_brand()
-    device_model = device.device_model() if device.device_model() else "Unknown"
-    device_info = f"{device_brand} {device_model}" if device_brand else "Unknown"
-
-    return device_type, browser_info, os_info, device_info
-
-
 def apply_excel_formatting(file_path):
     wb = load_workbook(file_path)
     ws = wb.active
@@ -105,9 +86,13 @@ def send_message():
     user_message = data.get('message')
     user_ip = request.remote_addr
     user_agent = request.headers.get('User-Agent')
-    device_type, browser_info, os_info, device_model = get_device_info(user_agent)
+
+    browser_info = data.get('browser', 'Unknown browser')
+    os_info = data.get('os', 'Unknown OS')
+    device_info = data.get('device', 'Unknown device')
+
     openai_response = get_reply_from_openai(user_message)
-    log_to_excel(user_ip, user_message, openai_response, device_type, browser_info, os_info, device_model)
+    log_to_excel(user_ip, user_message, openai_response, device_info, browser_info, os_info, device_info)
     response = {"reply": openai_response}
     return jsonify(response)
 # endregion
