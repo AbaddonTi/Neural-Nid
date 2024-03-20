@@ -1,5 +1,12 @@
 
+var notificationActive = false;
+
 document.getElementById('emailToCopy').onclick = function() {
+
+    if (notificationActive) return;
+
+    notificationActive = true;
+
     var email = 'neuronalnid@gmail.com';
     var el = document.createElement('textarea');
     el.value = email;
@@ -11,11 +18,25 @@ document.getElementById('emailToCopy').onclick = function() {
     document.execCommand('copy');
     document.body.removeChild(el);
 
+    // Изменение цвета email
     var emailElement = document.getElementById('emailToCopy');
     emailElement.style.color = '#21c0c5';
     setTimeout(function() {
         emailElement.style.color = 'rgba(41,213,218,0.8)';
     }, 200);
+
+
+    // Показ и скрытие уведомления
+    var notification = document.getElementById('copyNotification');
+    notification.style.display = 'block';
+    notification.style.opacity = '1';
+    setTimeout(function() {
+        notification.style.opacity = '0';
+        setTimeout(function() {
+            notification.style.display = 'none';
+            notificationActive = false;
+        }, 500);
+    }, 300);
 };
 
 function updateFormHeight() {
