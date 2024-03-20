@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         form.style.backgroundColor = "rgb(239,240,245)";
 
-        input.style.backgroundColor = "rgb(28,30,33)";
+        input.style.backgroundColor = "rgb(104,107,108)";
 
         input.style.color = "rgb(255,255,255)";
 
