@@ -1,14 +1,10 @@
 import re
 import os
-import pytz
 import openai
 import logging
-import pandas as pd
+import requests
 
 from flask_cors import CORS
-from datetime import datetime
-from openpyxl import load_workbook
-from openpyxl.styles import Alignment
 from flask import Flask, request, jsonify, send_from_directory
 
 
@@ -19,52 +15,7 @@ CORS(app, supports_credentials=True)
 logging.basicConfig(level=logging.INFO)
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
-log_dir = "logs"
-os.makedirs(log_dir, exist_ok=True)
-# endregion
-
-
-# region Logging
-def apply_excel_formatting(file_path):
-    wb = load_workbook(file_path)
-    ws = wb.active
-
-    for row in ws.iter_rows():
-        for cell in row:
-            cell.alignment = Alignment(vertical='top', wrap_text=True)
-
-    wb.save(file_path)
-
-
-def log_to_excel(user_ip, user_question, ai_answer, device_info, browser_info, os_info):
-    tz = pytz.timezone('Europe/Paris')
-    now = datetime.now(tz)
-    latest_file = None
-
-    for file in sorted(os.listdir(log_dir), reverse=True):
-        if file.endswith(".xlsx") and os.path.getsize(os.path.join(log_dir, file)) < 1 * 1024 * 1024:
-            latest_file = os.path.join(log_dir, file)
-            break
-
-    if not latest_file:
-        latest_file = os.path.join(log_dir, f"logs_{now.strftime('%Y-%m-%d_%H-%M-%S')}.xlsx")
-        df = pd.DataFrame(columns=['Time', 'IP', 'Question', 'Answer', 'Device', 'Browser'])
-    else:
-        df = pd.read_excel(latest_file)
-
-    new_row = pd.DataFrame({
-        'Time': [now.strftime('%Y-%m-%d %H:%M:%S')],
-        'IP': [user_ip],
-        'Question': [user_question],
-        'Answer': [ai_answer],
-        'Device': [device_info],
-        'Browser': [browser_info],
-        'OS': [os_info],
-    })
-
-    df = pd.concat([df, new_row], ignore_index=True)
-    df.to_excel(latest_file, index=False)
-    apply_excel_formatting(latest_file)
+STATISTICS_SERVICE_URL = os.getenv("STATISTICS_SERVICE_URL", "http://localhost:5600/log")
 # endregion
 
 
@@ -83,15 +34,7 @@ def home():
 def send_message():
     data = request.json
     user_message = data.get('message')
-    user_ip = request.remote_addr
-    user_agent = request.headers.get('User-Agent')
-
-    browser_info = data.get('browser', 'Unknown browser')
-    os_info = data.get('os', 'Unknown OS')
-    device_info = data.get('device', 'Unknown device')
-
     openai_response = get_reply_from_openai(user_message)
-    log_to_excel(user_ip, user_message, openai_response, device_info, browser_info, os_info)
     response = {"reply": openai_response}
     return jsonify(response)
 # endregion
@@ -126,6 +69,20 @@ def get_reply_from_openai(user_message):
         logging.error(f"Ошибка при обращении к OpenAI: {e}")
         return "Sorry, I'm still in maintenance for a while..."
 # endregion
+
+
+# region Logging
+def send_log_to_statistics_service(data):
+    try:
+        response = requests.post(STATISTICS_SERVICE_URL, json=data)
+        if response.status_code == 200:
+            print("Data logged successfully")
+        else:
+            print("Failed to log data", response.text)
+    except Exception as e:
+        print("Exception occurred when logging data:", str(e))
+# endregion
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5500, debug=True)
