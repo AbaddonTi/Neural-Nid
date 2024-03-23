@@ -14,6 +14,7 @@ docker stop neural-nid-backend || true && \
 docker rm neural-nid-backend || true && \
 docker run -d --restart always --name neural-nid-backend --network=my-network -p 5500:5500 \
 -e OPENAI_API_KEY=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 \
+-e STATISTICS_SERVICE_URL=http://statistics-collector:5600/log \
 neural-nid-backend && \
 
 # Сборка и запуск сервиса сбора статистики

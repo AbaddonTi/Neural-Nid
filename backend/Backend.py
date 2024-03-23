@@ -14,8 +14,6 @@ CORS(app, supports_credentials=True)
 
 logging.basicConfig(level=logging.INFO)
 openai.api_key = os.getenv('OPENAI_API_KEY')
-
-STATISTICS_SERVICE_URL = os.getenv("STATISTICS_SERVICE_URL", "http://localhost:5600/log")
 # endregion
 
 
@@ -30,11 +28,21 @@ def log_request_info():
 def home():
     return send_from_directory(app.static_folder, 'Frontend.html')
 
+
 @app.route('/send_message', methods=['POST'])
 def send_message():
     data = request.json
     user_message = data.get('message')
     openai_response = get_reply_from_openai(user_message)
+    log_data = {
+        'IP': request.remote_addr,
+        'Question': user_message,
+        'Answer': openai_response,
+        'Device': data.get('device', 'Unknown device'),
+        'Browser': data.get('browser', 'Unknown browser'),
+        'OS': data.get('os', 'Unknown OS')
+    }
+    send_log_to_statistics_service(log_data)
     response = {"reply": openai_response}
     return jsonify(response)
 # endregion
