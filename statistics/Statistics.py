@@ -30,25 +30,18 @@ def apply_excel_formatting(file_path):
 
 
 @app.route('/log', methods=['POST'])
-def log_to_excel():
+def log_to_csv():
     try:
         data = request.json
-        print("Logging data:", data)
 
         tz = pytz.timezone('Europe/Paris')
         now = datetime.now(tz)
-        latest_file = None
+        latest_file_csv = os.path.join(log_dir, f"logs.csv")
 
-        for file in sorted(os.listdir(log_dir), reverse=True):
-            if file.endswith(".xlsx") and os.path.getsize(os.path.join(log_dir, file)) < 1 * 1024 * 1024:
-                latest_file = os.path.join(log_dir, file)
-                break
-
-        if not latest_file:
-            latest_file = os.path.join(log_dir, f"logs_{now.strftime('%Y-%m-%d_%H-%M-%S')}.xlsx")
+        if not os.path.exists(latest_file_csv):
             df = pd.DataFrame(columns=['Time', 'IP', 'Question', 'Answer', 'Device', 'Browser', 'OS'])
         else:
-            df = pd.read_excel(latest_file)
+            df = pd.read_csv(latest_file_csv)
 
         new_row = {
             'Time': now.strftime('%Y-%m-%d %H:%M:%S'),
@@ -61,28 +54,25 @@ def log_to_excel():
         }
 
         df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
-        df.to_excel(latest_file, index=False)
-        apply_excel_formatting(latest_file)
+        df.to_csv(latest_file_csv, index=False)
 
         return jsonify({"message": "Logged successfully"}), 200
     except Exception as e:
         return jsonify({"error": f"Failed to log data: {str(e)}"}), 500
 
 
+
 @app.route('/get_latest_log', methods=['GET'])
 def get_latest_log():
     try:
-        latest_file = None
-        for file in sorted(os.listdir(log_dir), reverse=True):
-            if file.endswith(".xlsx"):
-                latest_file = os.path.join(log_dir, file)
-                break
-        if latest_file:
-            return send_file(latest_file, as_attachment=True)
+        latest_file_csv = os.path.join(log_dir, "logs.csv")
+        if os.path.exists(latest_file_csv):
+            return send_file(latest_file_csv, as_attachment=True)
         else:
             return jsonify({"message": "No logs found"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 
 if __name__ == '__main__':
