@@ -14,6 +14,8 @@ CORS(app, supports_credentials=True)
 
 logging.basicConfig(level=logging.INFO)
 openai.api_key = os.getenv('OPENAI_API_KEY')
+
+STATISTICS_SERVICE_URL = os.getenv("STATISTICS_SERVICE_URL")
 # endregion
 
 
