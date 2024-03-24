@@ -32,6 +32,7 @@ def home():
 @app.route('/send_message', methods=['POST'])
 def send_message():
     data = request.json
+    print("Received data:", data)
     user_message = data.get('message')
     openai_response = get_reply_from_openai(user_message)
     log_data = {
@@ -81,6 +82,9 @@ def get_reply_from_openai(user_message):
 
 # region Logging
 def send_log_to_statistics_service(data):
+    print("Sending log data:", data)
+    print("Statistics Service URL:", STATISTICS_SERVICE_URL)
+
     try:
         response = requests.post(STATISTICS_SERVICE_URL, json=data)
         if response.status_code == 200:

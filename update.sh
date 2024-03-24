@@ -6,6 +6,7 @@ docker network ls | grep -q my-network || docker network create my-network
 cd /root/Neural-Nid/
 git fetch origin
 git reset --hard origin/master
+git pull origin master
 
 
 # Сборка и запуск бэкенда

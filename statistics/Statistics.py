@@ -32,6 +32,7 @@ def apply_excel_formatting(file_path):
 def log_to_excel():
     try:
         data = request.json
+        print("Logging data:", data)
 
         tz = pytz.timezone('Europe/Paris')
         now = datetime.now(tz)
