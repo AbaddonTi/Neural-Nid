@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import pytz
+from flask import send_file
 
 
 from flask import Flask, request, jsonify
@@ -66,6 +67,22 @@ def log_to_excel():
         return jsonify({"message": "Logged successfully"}), 200
     except Exception as e:
         return jsonify({"error": f"Failed to log data: {str(e)}"}), 500
+
+
+@app.route('/get_latest_log', methods=['GET'])
+def get_latest_log():
+    try:
+        latest_file = None
+        for file in sorted(os.listdir(log_dir), reverse=True):
+            if file.endswith(".xlsx"):
+                latest_file = os.path.join(log_dir, file)
+                break
+        if latest_file:
+            return send_file(latest_file, as_attachment=True)
+        else:
+            return jsonify({"message": "No logs found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == '__main__':
