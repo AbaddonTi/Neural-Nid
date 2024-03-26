@@ -6,15 +6,19 @@ import logging
 
 
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse, FileResponse
-from fastapi.staticfiles import StaticFiles
+from fastapi.responses import JSONResponse, PlainTextResponse
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.concurrency import run_in_threadpool
-
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 
 # region Metrics
+limiter = Limiter(key_func=get_remote_address)
 app = FastAPI()
+
+app.state.limiter = limiter
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -38,12 +42,13 @@ async def log_request_info(request: Request, call_next):
     return response
 
 
-@app.get("/")
-async def home():
-    return FileResponse('static/Frontend.html')
+@app.exception_handler(RateLimitExceeded)
+async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
+    return PlainTextResponse("You have made too many requests recently. Please try again in a few minutes...", status_code=429)
 
 
 @app.post("/send_message")
+@limiter.limit("5/minute")
 async def send_message(request: Request):
     data = await request.json()
     user_message = data.get('message')
