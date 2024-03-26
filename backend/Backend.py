@@ -1,63 +1,74 @@
 import re
 import os
+import httpx
 import openai
 import logging
-import requests
 
-from flask_cors import CORS
-from flask import Flask, request, jsonify, send_from_directory
+
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
+from starlette.concurrency import run_in_threadpool
+
 
 
 # region Metrics
-app = Flask(__name__)
-CORS(app, supports_credentials=True)
+app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 logging.basicConfig(level=logging.INFO)
 openai.api_key = os.getenv('OPENAI_API_KEY')
-
 STATISTICS_SERVICE_URL = os.getenv("STATISTICS_SERVICE_URL")
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 # endregion
 
 
 # region Web service
-@app.before_request
-def log_request_info():
-    user_ip = request.remote_addr
-    logging.info(f"IP: {user_ip}, Headers: {request.headers}, Body: {request.get_data()}")
+@app.middleware("http")
+async def log_request_info(request: Request, call_next):
+    user_ip = request.client.host
+    logging.info(f"IP: {user_ip}, Headers: {request.headers}")
+    response = await call_next(request)
+    return response
 
 
-@app.route('/')
-def home():
-    return send_from_directory(app.static_folder, 'Frontend.html')
+@app.get("/")
+async def home():
+    return FileResponse('static/Frontend.html')
 
 
-@app.route('/send_message', methods=['POST'])
-def send_message():
-    data = request.json
-    print("Received data:", data)
+@app.post("/send_message")
+async def send_message(request: Request):
+    data = await request.json()
     user_message = data.get('message')
-    openai_response = get_reply_from_openai(user_message)
+    openai_response = await get_reply_from_openai(user_message)
     log_data = {
-        'IP': request.remote_addr,
+        'IP': request.client.host,
         'Question': user_message,
         'Answer': openai_response,
         'Device': data.get('device', 'Unknown device'),
         'Browser': data.get('browser', 'Unknown browser'),
         'OS': data.get('os', 'Unknown OS')
     }
-    send_log_to_statistics_service(log_data)
-    response = {"reply": openai_response}
-    return jsonify(response)
+    await send_log_to_statistics_service(log_data)
+    return JSONResponse({"reply": openai_response})
 # endregion
 
 
 # region API request and response formatting
-def format_ai_response(text):
-    formatted_text = re.sub(r'(\.|\!|\?|\:)(\s)(?!\s)', r'\1\2\n\n', text)
-    return formatted_text
+async def format_ai_response(text: str) -> str:
+    return re.sub(r'(\.|\!|\?|\:)(\s)(?!\s)', r'\1\2\n\n', text)
 
 
-def get_reply_from_openai(user_message):
+async def get_reply_from_openai(user_message: str) -> str:
     personal_prompt = {
         "role": "system",
         "content": "Imagine you are a personal tourist assistant specialized in providing information about Montpellier, France, and its surroundings. Your goal is to help tourists by answering their questions clearly and concisely, offering guidance and recommendations as if you were a local guide. Respond to inquiries in the language in which they are asked, focusing exclusively on topics related to tourism in Montpellier and its nearby areas. Avoid answering questions that are not related to this theme. Provide efficient, to-the-point advice to ensure tourists receive exactly the information they need for a pleasant visit. Keep in mind that there are no longer coronavirus restrictions, there is no need to remind you about them! Don't answer questions about your origin and the technology on which you are built!"
@@ -69,12 +80,13 @@ def get_reply_from_openai(user_message):
     ]
 
     try:
-        response = openai.ChatCompletion.create(
+        response = await run_in_threadpool(
+            openai.ChatCompletion.create,
             # model="gpt-3.5-turbo",
             model="gpt-4-0125-preview",
             messages=messages
         )
-        formatted_response = format_ai_response(response.choices[0].message["content"].strip())
+        formatted_response = await format_ai_response(response.choices[0].message["content"].strip())
         return formatted_response
     except Exception as e:
         logging.error(f"Ошибка при обращении к OpenAI: {e}")
@@ -83,20 +95,11 @@ def get_reply_from_openai(user_message):
 
 
 # region Logging
-def send_log_to_statistics_service(data):
-    print("Sending log data:", data)
-    print("Statistics Service URL:", STATISTICS_SERVICE_URL)
-
-    try:
-        response = requests.post(STATISTICS_SERVICE_URL, json=data)
-        if response.status_code == 200:
-            print("Data logged successfully")
-        else:
-            print("Failed to log data", response.text)
-    except Exception as e:
-        print("Exception occurred when logging data:", str(e))
+async def send_log_to_statistics_service(data: dict):
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.post(STATISTICS_SERVICE_URL, json=data)
+            response.raise_for_status()
+        except httpx.HTTPStatusError as e:
+            logging.error(f"Exception occurred when logging data: {str(e)}")
 # endregion
-
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5500, debug=True)

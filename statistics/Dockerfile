@@ -3,4 +3,4 @@ WORKDIR /app
 COPY . /app
 RUN pip install -r requirements.txt
 EXPOSE 5600
-CMD ["python", "Statistics.py"]
+CMD ["gunicorn", "-w", "9", "-k", "uvicorn.workers.UvicornWorker", "-b", "0.0.0.0:5600", "Statistics:app"]
