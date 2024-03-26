@@ -185,7 +185,10 @@ document.getElementById('new-message-form').addEventListener('submit', function(
                 errorBotMessageElement.classList.add('message', 'bot');
                 errorBotMessageElement.innerHTML = `<div class="text">Sorry, I'm still in maintenance for a while...</div>`;
                 messageList.appendChild(errorBotMessageElement);
-                errorBotMessageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (window.innerWidth <= 600) {
+                    errorBotMessageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+
             });
     }
 });

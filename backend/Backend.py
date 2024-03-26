@@ -78,8 +78,8 @@ async def get_reply_from_openai(user_message: str) -> str:
     try:
         response = await run_in_threadpool(
             openai.ChatCompletion.create,
-            model="gpt-3.5-turbo",
-            # model="gpt-4-0125-preview",
+            # model="gpt-3.5-turbo",
+            model="gpt-4-0125-preview",
             messages=messages
         )
         formatted_response = await format_ai_response(response.choices[0].message["content"].strip())
