@@ -6,19 +6,13 @@ import logging
 
 
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse, PlainTextResponse
+from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.concurrency import run_in_threadpool
-from slowapi import Limiter
-from slowapi.util import get_remote_address
-from slowapi.errors import RateLimitExceeded
 
 
 # region Metrics
-limiter = Limiter(key_func=get_remote_address)
 app = FastAPI()
-
-app.state.limiter = limiter
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -42,13 +36,12 @@ async def log_request_info(request: Request, call_next):
     return response
 
 
-@app.exception_handler(RateLimitExceeded)
-async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
-    return PlainTextResponse("You have made too many requests recently. Please try again in a few minutes...", status_code=429)
+@app.get("/")
+async def home():
+    return FileResponse('static/Frontend.html')
 
 
 @app.post("/send_message")
-@limiter.limit("5/minute")
 async def send_message(request: Request):
     data = await request.json()
     user_message = data.get('message')
@@ -85,8 +78,8 @@ async def get_reply_from_openai(user_message: str) -> str:
     try:
         response = await run_in_threadpool(
             openai.ChatCompletion.create,
-            # model="gpt-3.5-turbo",
-            model="gpt-4-0125-preview",
+            model="gpt-3.5-turbo",
+            # model="gpt-4-0125-preview",
             messages=messages
         )
         formatted_response = await format_ai_response(response.choices[0].message["content"].strip())
