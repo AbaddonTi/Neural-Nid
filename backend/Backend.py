@@ -5,7 +5,7 @@ import openai
 import logging
 
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -26,8 +26,6 @@ app.add_middleware(
 logging.basicConfig(level=logging.INFO)
 openai.api_key = os.getenv('OPENAI_API_KEY')
 STATISTICS_SERVICE_URL = os.getenv("STATISTICS_SERVICE_URL")
-
-app.mount("/static", StaticFiles(directory="static"), name="static")
 # endregion
 
 
