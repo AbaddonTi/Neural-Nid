@@ -1,16 +1,10 @@
 
-
-
 /* Base styles */
 body {
     padding-top: 75px;
     font-family: Arial, sans-serif;
     margin: 0;
     background-color: #f0f2f5;
-}
-
-html {
-    scroll-behavior: smooth;
 }
 
 
@@ -79,7 +73,7 @@ html {
 }
 
 #send-message-button {
-    background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1219743955747471370/icon_send_2.png?ex=660c6a14&is=65f9f514&hm=03682a8469e409701f20c8e7f93733f2351b10dc92f213ddf85794f245d746c7&');
+    background-image: url('https://drive.google.com/uc?export=view&id=1wtkI2442BQcgTdE26aRm_9tqKfsRILZz');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -178,25 +172,23 @@ nav a:hover {
     background-color: rgba(21, 208, 218, 0.6);
 }
 
-
-/* Page content */
-.page-content {
-    margin: auto;
-    margin-bottom: 100px;
-    min-height: calc(100vh - 100px);
-    max-width: 600px;
+#chat-link {
+    background-color: rgba(18, 147, 147, 0.5);
+    border: none;
     color: white;
-    width: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    text-align: center;
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
+#chat-link:hover {
+    background-color: rgba(21, 208, 218, 0.6);
+}
+
+
+
+/* Page content */
 .background {
     position: fixed;
     top: 0;
@@ -210,7 +202,7 @@ nav a:hover {
 }
 
 #background-image-1 {
-    background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1218495002909610084/background-image-1.jpg?ex=6607dee7&is=65f569e7&hm=e2f1fe6c4d8e28f3de3c457e404f39f519162e77a56eda8aee73b8a1dfed7c63&');
+    background-image: url('https://drive.google.com/uc?export=view&id=1KeADiCBiP6k0C4a4OwxivRrlUarak4rP');
 }
 
 
@@ -236,82 +228,6 @@ nav a:hover {
 }
 
 
-/* Text Styling for Page Content */
-.page-content h2, .page-content p {
-    color: white;
-    text-shadow: 0 0 8px rgba(0, 0, 0),
-        /*0 0 20px rgba(0, 0, 0), */
-    0 0 30px rgba(0, 0, 0);
-}
-
-
-/* Team Member */
-.team-member {
-    display: flex;
-    align-items: center;
-    margin-bottom: 40px;
-    width: 100%;
-}
-
-.avatar {
-    width: 15vw;
-    height: 15vw;
-    border-radius: 5%;
-    object-fit: cover;
-    margin-right: 20px;
-}
-
-.member-info {
-    flex: 1;
-    text-align: left;
-}
-
-.member-info h3, .member-info p {
-    color: white;
-    text-shadow: 0 0 8px rgba(0, 0, 0),
-        /*0 0 20px rgba(0, 0, 0), */
-    0 0 30px rgba(0, 0, 0);
-    margin: 0;
-    line-height: 1.5;
-}
-
-.member-info p {
-    line-height: 1.5;
-}
-
-#teams {
-    margin-top: 30%;
-}
-
-#about-us {
-    margin-top: 40%;
-}
-
-
-/* Email Copy Interaction */
-#copyNotification {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(33, 192, 197, 0.9);
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-    z-index: 1000;
-    white-space: nowrap;
-}
-
-#emailToCopy {
-    cursor: pointer;
-    color: rgba(41,213,218,0.8);
-    font-weight: bold;
-}
-
-
 /* Responsive adjustments */
 @media (max-width: 600px) {
 
@@ -323,7 +239,6 @@ nav a:hover {
         height: 100%;
         margin: 0;
         padding: 0;
-        scroll-behavior: smooth;
     }
 
     body {
@@ -331,29 +246,7 @@ nav a:hover {
         flex-direction: column;
         height: 100vh;
         padding-top: 75px;
-        scroll-behavior: smooth;
     }
-
-    html {
-        scroll-behavior: smooth;
-    }
-
-    .page-content {
-        min-height: auto;
-        height: auto;
-    }
-
-    #contacts {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        padding: 20px;
-        box-sizing: border-box;
-    }
-
 
     .background {
         position: fixed;
@@ -361,11 +254,10 @@ nav a:hover {
         left: 0;
         width: 100%;
         height: var(--viewport-height);
-        background-image: url('https://cdn.discordapp.com/attachments/1072482277784825907/1219910991786147850/background-image-2mob-min_1.jpg?ex=660d05a5&is=65fa90a5&hm=687dfa20e6d3e972ef4cd5046561b4392bf5efa2f1d6568adf9c11be8f9151dc&');
+        background-image: url('https://drive.google.com/uc?export=view&id=1KeADiCBiP6k0C4a4OwxivRrlUarak4rP');
         background-size: cover;
         background-position: center;
         background-color: #191d20;
-        background-attachment: scroll;
     }
 
     #chat-container {
@@ -398,9 +290,5 @@ nav a:hover {
         margin: 0 10px;
         padding: 5px 10px;
         font-size: 14px;
-    }
-    .team-member .avatar {
-        width: 20vw;
-        height: 20vw;
     }
 }
