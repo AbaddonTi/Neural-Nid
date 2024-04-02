@@ -30,7 +30,7 @@ STATISTICS_SERVICE_URL = os.getenv("STATISTICS_SERVICE_URL")
 # region Web service
 @app.middleware("http")
 async def log_request_info(request: Request, call_next):
-    user_ip = request.client.host
+    user_ip = get_user_ip(request)
     logging.info(f"IP: {user_ip}, Headers: {request.headers}")
     response = await call_next(request)
     return response
@@ -46,8 +46,9 @@ async def send_message(request: Request):
     data = await request.json()
     user_message = data.get('message')
     openai_response = await get_reply_from_openai(user_message)
+    user_ip = get_user_ip(request)
     log_data = {
-        'IP': request.client.host,
+        'IP': user_ip,
         'Question': user_message,
         'Answer': openai_response,
         'Device': data.get('device', 'Unknown device'),
@@ -91,6 +92,16 @@ async def get_reply_from_openai(user_message: str) -> str:
 
 
 # region Logging
+def get_user_ip(request: Request) -> str:
+    if "x-forwarded-for" in request.headers:
+        ip = request.headers["x-forwarded-for"].split(",")[0]
+    elif "x-real-ip" in request.headers:
+        ip = request.headers["x-real-ip"]
+    else:
+        ip = request.client.host
+    return ip
+
+
 async def send_log_to_statistics_service(data: dict):
     async with httpx.AsyncClient() as client:
         try:

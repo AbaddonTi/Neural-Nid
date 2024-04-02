@@ -148,10 +148,10 @@ body {
 .about-us-container {
     width: 100%;
     position: fixed;
-    top: 0; /* Меняйте это значение, чтобы не перекрывать основную навигацию */
+    top: 0;
     z-index: 1000;
     display: flex;
-    justify-content: center; /* Или используйте flex-start для выравнивания в начале */
+    justify-content: center;
     padding: 10px 0;
     background-color: rgba(240, 242, 245, 0.1);
     backdrop-filter: blur(5px);
@@ -171,9 +171,6 @@ body {
 .about-us-link:hover {
     background-color: rgba(21, 208, 218, 0.6);
 }
-
-
-
 
 
 /* Page content */
