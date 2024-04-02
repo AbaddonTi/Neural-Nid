@@ -3,6 +3,22 @@ const messageInput = document.getElementById('new-message-input');
 const sendButton = document.getElementById('send-message-button');
 const messageList = document.getElementById('message-list');
 
+document.addEventListener('DOMContentLoaded', (event) => {
+    setTimeout(showWelcomeMessage, 500);
+});
+
+function showWelcomeMessage() {
+    const welcomeText = "Bonjour, <br><br> Je suis votre assistant personnel à Montpellier basé sur l'IA, posez-moi une question, par exemple, sur le tourisme et je vous répondrai immédiatement, <br><br> ..mais gardez à l'esprit que je peux parfois me tromper.";
+    const loadingElement = appendLoadingSpinner();
+
+    setTimeout(() => {
+        messageList.removeChild(loadingElement);
+        appendMessage(welcomeText, 'bot');
+        scrollToMessage(messageList.lastChild);
+    }, 2500);
+}
+
+
 function init() {
     form.addEventListener('submit', handleFormSubmit);
 }
