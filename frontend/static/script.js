@@ -26,7 +26,7 @@ function handleFormSubmit(event) {
 function sendUserMessage(messageText) {
     const userInfo = getUserInfo(messageText);
     const loadingElement = appendLoadingSpinner();
-    return fetch('https://neuronalnid.com/api/send_message0', {
+    return fetch('https://neuronalnid.com/api/send_message', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userInfo)
