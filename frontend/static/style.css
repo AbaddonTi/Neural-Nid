@@ -73,7 +73,7 @@ body {
 }
 
 #send-message-button {
-    background-image: url('https://drive.google.com/uc?export=view&id=1wtkI2442BQcgTdE26aRm_9tqKfsRILZz');
+    background-image: url('https://raw.githubusercontent.com/AbaddonTi/images_site_NN/main/images_site_NN/icon-send.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -145,20 +145,20 @@ body {
 
 
 /* Navigation styles */
-nav {
+.about-us-container {
     width: 100%;
     position: fixed;
-    top: 0;
+    top: 0; /* Меняйте это значение, чтобы не перекрывать основную навигацию */
     z-index: 1000;
     display: flex;
-    justify-content: center;
+    justify-content: center; /* Или используйте flex-start для выравнивания в начале */
     padding: 10px 0;
     background-color: rgba(240, 242, 245, 0.1);
     backdrop-filter: blur(5px);
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-nav a {
+.about-us-link {
     text-decoration: none;
     margin: 0 15px;
     color: white;
@@ -168,23 +168,11 @@ nav a {
     transition: background-color 0.3s ease;
 }
 
-nav a:hover {
+.about-us-link:hover {
     background-color: rgba(21, 208, 218, 0.6);
 }
 
-#chat-link {
-    background-color: rgba(18, 147, 147, 0.5);
-    border: none;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
 
-#chat-link:hover {
-    background-color: rgba(21, 208, 218, 0.6);
-}
 
 
 
@@ -202,7 +190,7 @@ nav a:hover {
 }
 
 #background-image-1 {
-    background-image: url('https://drive.google.com/uc?export=view&id=1KeADiCBiP6k0C4a4OwxivRrlUarak4rP');
+    background-image: url('https://raw.githubusercontent.com/AbaddonTi/images_site_NN/main/images_site_NN/background-image-1.jpg');
 }
 
 
@@ -254,7 +242,7 @@ nav a:hover {
         left: 0;
         width: 100%;
         height: var(--viewport-height);
-        background-image: url('https://drive.google.com/uc?export=view&id=1KeADiCBiP6k0C4a4OwxivRrlUarak4rP');
+        background-image: url('https://raw.githubusercontent.com/AbaddonTi/images_site_NN/main/images_site_NN/background-image-2mob-min_1.jpg');
         background-size: cover;
         background-position: center;
         background-color: #191d20;
@@ -286,7 +274,7 @@ nav a:hover {
     #send-message-button {
         font-size: 14px;
     }
-    nav a {
+    .about-us-link {
         margin: 0 10px;
         padding: 5px 10px;
         font-size: 14px;
