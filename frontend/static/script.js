@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 function showWelcomeMessage() {
-    const welcomeText = "Bonjour, <br><br> Je suis votre assistant personnel à Montpellier basé sur l'IA, posez-moi une question, par exemple, sur le tourisme et je vous répondrai immédiatement, <br><br> ..mais gardez à l'esprit que je peux parfois me tromper.";
+    const welcomeText = "Bonjour, <br><br>Je suis votre assistant personnel et guide à Montpellier. <br><br>N'hésitez pas à me poser toutes vos questions..";
     const loadingElement = appendLoadingSpinner();
 
     setTimeout(() => {
