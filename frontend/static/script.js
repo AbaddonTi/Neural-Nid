@@ -3,9 +3,54 @@ const messageInput = document.getElementById('new-message-input');
 const sendButton = document.getElementById('send-message-button');
 const messageList = document.getElementById('message-list');
 
+
+// region Google Analytics
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-B9SZ2PRDMG');
+
+
+function handleBotResponse(data) {
+    const botMessageElement = appendMessage(data.reply, 'bot');
+    scrollToMessage(botMessageElement);
+    // Имя события обновлено для согласованности
+    gtag('event', 'message_receive', {
+        'event_category': 'Message',
+        'event_label': 'Message Received'
+    });
+}
+
+
+const aboutUsLink = document.querySelector('.about-us-link');
+if (aboutUsLink) {
+    aboutUsLink.addEventListener('click', function() {
+        gtag('event', 'about_us_clicked', {
+            'event_category': 'About Us Link',
+            'event_label': 'About Us Page Visited'
+        });
+    });
+}
+
+
+function init() {
+    if (form) {
+        form.addEventListener('submit', function(event) {
+            handleFormSubmit(event);
+            gtag('event', 'message_sent', {
+                'event_category': 'Message',
+                'event_label': 'Message Sent'
+            });
+        });
+    }
+}
+// endregion Google Analytics
+
+
 document.addEventListener('DOMContentLoaded', (event) => {
     setTimeout(showWelcomeMessage, 500);
 });
+
 
 function showWelcomeMessage() {
     const welcomeText = "Bonjour, <br><br>Je suis votre assistant personnel et guide à Montpellier. <br><br>N'hésitez pas à me poser toutes vos questions..";
@@ -19,9 +64,7 @@ function showWelcomeMessage() {
 }
 
 
-function init() {
-    form.addEventListener('submit', handleFormSubmit);
-}
+
 
 function handleFormSubmit(event) {
     event.preventDefault();
@@ -51,10 +94,7 @@ function sendUserMessage(messageText) {
         .finally(() => messageList.removeChild(loadingElement));
 }
 
-function handleBotResponse(data) {
-    const botMessageElement = appendMessage(data.reply, 'bot');
-    scrollToMessage(botMessageElement);
-}
+
 
 function handleError(error) {
     console.error('Error:', error);
