@@ -23,6 +23,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+logging.basicConfig(level=logging.INFO)
+openai.api_key = os.getenv('OPENAI_API_KEY')
+STATISTICS_SERVICE_URL = os.getenv("STATISTICS_SERVICE_URL")
+
 def get_current_time_in_montpellier() -> str:
     timezone = pytz.timezone("Europe/Paris")
     montpellier_time = datetime.now(timezone)
