@@ -1,10 +1,12 @@
 import re
 import os
+import pytz
 import httpx
 import openai
 import logging
 
 
+from datetime import datetime
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -21,9 +23,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-logging.basicConfig(level=logging.INFO)
-openai.api_key = os.getenv('OPENAI_API_KEY')
-STATISTICS_SERVICE_URL = os.getenv("STATISTICS_SERVICE_URL")
+def get_current_time_in_montpellier() -> str:
+    timezone = pytz.timezone("Europe/Paris")
+    montpellier_time = datetime.now(timezone)
+    return montpellier_time.strftime("Exact current date and time: %Y-%m-%d %H:%M:%S")
 # endregion
 
 
@@ -66,6 +69,7 @@ async def format_ai_response(text: str) -> str:
 
 
 async def get_reply_from_openai(user_message: str) -> str:
+    current_time_str = get_current_time_in_montpellier()
     personal_prompt = {
         "role": "system",
         "content": "Imagine you are a personal tourist assistant specialized in providing information about Montpellier,"
@@ -75,6 +79,7 @@ async def get_reply_from_openai(user_message: str) -> str:
                    " Keep in mind that there are no longer coronavirus restrictions, there is no need to remind you about them!"
                    "  If asked about comparisons such as 'how are you better than a GPT' or questions about the technology you are built on, respond that you are a personal assistant and cannot answer such questions."
                    " For information on the technology, refer to NeuronalNid's documentation."
+                   " Current time in Montpellier: " + current_time_str
     }
 
     messages = [
