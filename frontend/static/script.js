@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 
 function showWelcomeMessage() {
-    const welcomeText = "Bonjour, <br><br>Je suis votre assistant personnel et guide à Montpellier. <br><br>N'hésitez pas à me poser toutes vos questions..";
+    const welcomeText = "Bonjour, <br><br>Je suis votre assistant personnel à Montpellier. <br><br>N'hésitez pas à me poser des questions dans n'importe quelle langue.";
     const loadingElement = appendLoadingSpinner();
 
     setTimeout(() => {
