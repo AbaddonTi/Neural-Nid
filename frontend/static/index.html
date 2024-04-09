@@ -48,9 +48,11 @@
 
 <div id="chat-container">
     <div id="message-list">
+        <!-- Messages -->
     </div>
+    <span id="characters-left">1000/1000</span>
     <form id="new-message-form">
-        <input type="text" id="new-message-input" placeholder="Posez vos questions ici..." required>
+        <input type="text" id="new-message-input" placeholder="Posez vos questions ici..." required maxlength="1000">
         <button type="submit" id="send-message-button"></button>
     </form>
 </div>

@@ -14,7 +14,6 @@ gtag('config', 'G-B9SZ2PRDMG');
 function handleBotResponse(data) {
     const botMessageElement = appendMessage(data.reply, 'bot');
     scrollToMessage(botMessageElement);
-    // Имя события обновлено для согласованности
     gtag('event', 'message_receive', {
         'event_category': 'Message',
         'event_label': 'Message Received'
@@ -62,6 +61,22 @@ function showWelcomeMessage() {
         scrollToMessage(messageList.lastChild);
     }, 2500);
 }
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    var messageInput = document.getElementById('new-message-input');
+    var charactersLeftSpan = document.getElementById('characters-left');
+    var maxLength = messageInput.maxLength;
+
+    function updateCharactersLeft() {
+        var currentLength = messageInput.value.length;
+        var charactersLeft = maxLength - currentLength;
+        charactersLeftSpan.textContent = `${charactersLeft}/${maxLength}`;
+    }
+
+    updateCharactersLeft();
+    messageInput.addEventListener('input', updateCharactersLeft);
+});
 
 
 
