@@ -9,8 +9,10 @@ window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-B9SZ2PRDMG');
+// endregion Google Analytics
 
 
+// region Event Handlers
 function handleBotResponse(data) {
     const botMessageElement = appendMessage(data.reply, 'bot');
     scrollToMessage(botMessageElement);
@@ -21,34 +23,89 @@ function handleBotResponse(data) {
 }
 
 
-const aboutUsLink = document.querySelector('.about-us-link');
-if (aboutUsLink) {
-    aboutUsLink.addEventListener('click', function() {
-        gtag('event', 'about_us_clicked', {
-            'event_category': 'About Us Link',
-            'event_label': 'About Us Page Visited'
-        });
-    });
+function handleFormSubmit(event) {
+    event.preventDefault();
+    const messageText = messageInput.value.trim();
+
+    if (!messageText) return;
+
+    disableUI();
+    clearInput();
+    updateCharactersLeft(); 
+    const userMessageElement = appendMessage(messageText, 'user');
+    scrollToMessage(userMessageElement);
+    sendUserMessage(messageText)
+        .then(handleBotResponse)
+        .catch(handleError)
+        .finally(() => enableUI());
 }
 
 
-function init() {
-    if (form) {
-        form.addEventListener('submit', function(event) {
-            handleFormSubmit(event);
-            gtag('event', 'message_sent', {
-                'event_category': 'Message',
-                'event_label': 'Message Sent'
-            });
-        });
+function handleError(error) {
+    console.error('Error:', error);
+    appendMessage("Sorry, I'm still in maintenance for a while...", 'bot', true);
+}
+// endregion Event Handlers
+
+// region UI Updates
+function disableUI() {
+    sendButton.disabled = true;
+    messageInput.value = '';
+}
+
+
+function enableUI() {
+    sendButton.disabled = false;
+}
+
+
+function updateCharactersLeft() {
+    var currentLength = messageInput.value.length;
+    var maxLength = messageInput.maxLength; 
+    var charactersLeft = maxLength - currentLength;
+    var charactersLeftSpan = document.getElementById('characters-left');
+    charactersLeftSpan.textContent = `${charactersLeft}/${maxLength}`;
+}
+
+
+function appendMessage(messageText, messageType, isError = false) {
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message', messageType);
+    if (isError && window.innerWidth <= 600) {
+        messageElement.style.scrollBehavior = 'smooth';
+        messageElement.style.block = 'start';
     }
+    messageElement.innerHTML = `<div class="text">${messageText}</div>`;
+    messageList.appendChild(messageElement);
+    return messageElement;
 }
-// endregion Google Analytics
 
 
-document.addEventListener('DOMContentLoaded', (event) => {
-    setTimeout(showWelcomeMessage, 500);
-});
+function scrollToMessage(messageElement) {
+    setTimeout(() => {
+        messageElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
+}
+
+
+function appendLoadingSpinner() {
+    const loadingElement = document.createElement('div');
+    loadingElement.classList.add('loading-spinner');
+    messageList.appendChild(loadingElement);
+    return loadingElement;
+}
+
+
+function getUserInfo(messageText) {
+    const parser = new UAParser();
+    const result = parser.getResult();
+    return {
+        message: messageText,
+        browser: `${result.browser.name} ${result.browser.version}`,
+        os: `${result.os.name} ${result.os.version}`,
+        device: result.device.model ? `${result.device.vendor} ${result.device.model}` : 'Unknown device'
+    };
+}
 
 
 function showWelcomeMessage() {
@@ -63,40 +120,13 @@ function showWelcomeMessage() {
 }
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    var messageInput = document.getElementById('new-message-input');
-    var charactersLeftSpan = document.getElementById('characters-left');
-    var maxLength = messageInput.maxLength;
-
-    function updateCharactersLeft() {
-        var currentLength = messageInput.value.length;
-        var charactersLeft = maxLength - currentLength;
-        charactersLeftSpan.textContent = `${charactersLeft}/${maxLength}`;
-    }
-
-    updateCharactersLeft();
-    messageInput.addEventListener('input', updateCharactersLeft);
-});
-
-
-
-
-function handleFormSubmit(event) {
-    event.preventDefault();
-    const messageText = messageInput.value.trim();
-
-    if (!messageText) return;
-
-    disableUI();
-    clearInput();
-    const userMessageElement = appendMessage(messageText, 'user');
-    scrollToMessage(userMessageElement);
-    sendUserMessage(messageText)
-        .then(handleBotResponse)
-        .catch(handleError)
-        .finally(() => enableUI());
+function clearInput() {
+    messageInput.value = '';
 }
+// endregion UI Updates
 
+
+// region Network Requests
 function sendUserMessage(messageText) {
     const userInfo = getUserInfo(messageText);
     const loadingElement = appendLoadingSpinner();
@@ -108,61 +138,39 @@ function sendUserMessage(messageText) {
         .then(response => response.json())
         .finally(() => messageList.removeChild(loadingElement));
 }
+// endregion Network Requests
 
 
+// region Setup
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(showWelcomeMessage, 500);
+    updateCharactersLeft();
+    messageInput.addEventListener('input', updateCharactersLeft);
+});
 
-function handleError(error) {
-    console.error('Error:', error);
-    appendMessage("Sorry, I'm still in maintenance for a while...", 'bot', true);
+
+const aboutUsLink = document.querySelector('.about-us-link');
+if (aboutUsLink) {
+    aboutUsLink.addEventListener('click', function() {
+        gtag('event', 'about_us_clicked', {
+            'event_category': 'About Us Link',
+            'event_label': 'About Us Page Visited'
+        });
+    });
 }
 
-function disableUI() {
-    sendButton.disabled = true;
-    messageInput.value = '';
-}
-
-function enableUI() {
-    sendButton.disabled = false;
-}
-
-function appendMessage(messageText, messageType, isError = false) {
-    const messageElement = document.createElement('div');
-    messageElement.classList.add('message', messageType);
-    if (isError && window.innerWidth <= 600) {
-        messageElement.style.scrollBehavior = 'smooth';
-        messageElement.style.block = 'start';
+function init() {
+    if (form) {
+        form.addEventListener('submit', function(event) {
+            handleFormSubmit(event);
+            gtag('event', 'message_sent', {
+                'event_category': 'Message',
+                'event_label': 'Message Sent'
+            });
+        });
     }
-    messageElement.innerHTML = `<div class="text">${messageText}</div>`;
-    messageList.appendChild(messageElement);
-    return messageElement;
 }
+// endregion Setup
 
-function scrollToMessage(messageElement) {
-    setTimeout(() => {
-        messageElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }, 100);
-}
-
-function appendLoadingSpinner() {
-    const loadingElement = document.createElement('div');
-    loadingElement.classList.add('loading-spinner');
-    messageList.appendChild(loadingElement);
-    return loadingElement;
-}
-
-function getUserInfo(messageText) {
-    const parser = new UAParser();
-    const result = parser.getResult();
-    return {
-        message: messageText,
-        browser: `${result.browser.name} ${result.browser.version}`,
-        os: `${result.os.name} ${result.os.version}`,
-        device: result.device.model ? `${result.device.vendor} ${result.device.model}` : 'Unknown device'
-    };
-}
-
-function clearInput() {
-    messageInput.value = '';
-}
 
 init();
