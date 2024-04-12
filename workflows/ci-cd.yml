@@ -1,0 +1,69 @@
+name: Conditional CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+      - 'statistics/**'
+      - '.github/workflows/**'
+
+jobs:
+  check-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Setup SSH connections and deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_DO_IP }}
+          username: ${{ secrets.SERVER_DO_USER }}
+          password: ${{ secrets.SERVER_DO_PASSWORD }}
+          script: |
+            # Разделение списка серверов на массив
+            IFS=',' read -ra SERVER_LIST <<< "${{ secrets.SERVER_DO_IP }}"
+            for SERVER_IP in "${SERVER_LIST[@]}"; do
+              # Проверка, является ли сервер новым
+              IS_NEW=$(ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_DO_USER }}@$SERVER_IP "test -e ~/is_configured && echo 'no' || echo 'yes'")
+              if [ "$IS_NEW" = "yes" ]; then
+                # Если сервер новый, выполняем инициализацию
+                ssh ${{ secrets.SERVER_DO_USER }}@$SERVER_IP "bash ~/new_server_settings.sh"
+                ssh ${{ secrets.SERVER_DO_USER }}@$SERVER_IP "touch ~/is_configured"
+              fi
+
+              # Деплой на сервер
+              ssh ${{ secrets.SERVER_DO_USER }}@$SERVER_IP "
+                # Проверка и создание сети Docker, если она еще не создана
+                docker network ls | grep -q my-network || docker network create my-network
+
+                # Обновление кода из репозитория
+                cd /root/Neural-Nid/
+                git fetch origin
+                git reset --hard origin/master
+                git pull origin master
+
+                # Переход в соответствующую директорию и деплой
+                DEPLOY_ALL=$(git diff --name-only HEAD~1 | grep -q 'new_server_settings.sh' && echo 'yes' || echo 'no')
+                if [ "$IS_NEW" = "yes" ] || [ "$DEPLOY_ALL" = "yes" ]; then
+                  # Если сервер новый или были изменения в скрипте настройки, деплоим все
+                  (cd ~/Neural-Nid/backend && docker-compose up -d)
+                  (cd ~/Neural-Nid/statistics && docker-compose up -d)
+                  (cd ~/Neural-Nid/frontend && docker-compose up -d)
+                else
+                  # Иначе деплоим только измененные компоненты
+                  if [ -n "$(git diff --name-only HEAD~1 | grep 'backend/')" ]; then
+                    (cd ~/Neural-Nid/backend && docker-compose up -d)
+                  fi
+                  if [ -n "$(git diff --name-only HEAD~1 | grep 'statistics/')" ]; then
+                    (cd ~/Neural-Nid/statistics && docker-compose up -d)
+                  fi
+                  if [ -n "$(git diff --name-only HEAD~1 | grep 'frontend/')" ]; then
+                    (cd ~/Neural-Nid/frontend && docker-compose up -d)
+                  fi
+                fi
+              "
+            done
