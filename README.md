@@ -1,6 +1,8 @@
 
 ![NN Hub](https://github.com/AbaddonTi/Neural-Nid/assets/145202297/a4e3c1e7-901a-4b92-9ccd-65eb1c1e6f97)
 
+
+
 Структура проекта:
 ```
 .
