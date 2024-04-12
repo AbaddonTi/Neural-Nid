@@ -1,0 +1,8 @@
+# Ignore the logs directory
+/logs/
+
+# Ignore the entire backup directory
+/backup/
+
+# Ignore README.md file
+README.md
