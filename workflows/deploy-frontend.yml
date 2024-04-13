@@ -1,0 +1,22 @@
+name: Deploy Frontend
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Sparse Checkout
+        uses: actions/checkout@v2
+        with:
+          path: 'Neural-Nid'
+          sparse-checkout: 'frontend/*'
+
+      - name: Build and Deploy Frontend Container
+        run: |
+          cd Neural-Nid/frontend
+          docker stop neural-nid-frontend || true
+          docker rm neural-nid-frontend || true
+          docker build -t neural-nid-frontend .
+          docker run -d --restart always --network=my-network -p 8080:80 --name neural-nid-frontend neural-nid-frontend
