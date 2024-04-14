@@ -157,7 +157,6 @@ jobs:
                 docker rm neural-nid-frontend || true
                 docker build -t neural-nid-frontend .
                 docker run -d --restart always --network=my-network -p 8080:80 --name neural-nid-frontend neural-nid-frontend
-
               EOF
             ) &
           done
