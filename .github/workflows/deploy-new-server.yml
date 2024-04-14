@@ -53,7 +53,7 @@ jobs:
             echo "Checking for Docker network"
             if ! docker network ls | grep -q my-network; then
               echo "Creating Docker network"
-              docker network create my-network
+              docker network create my-network || true
             fi
 
             # Настройка ключей GitHub
