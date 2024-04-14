@@ -17,49 +17,53 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Setup job for each server
-        id: setup-job 
         run: |
           SERVERS_IPS="${{ secrets.SERVERS_IPS }}"
           IFS=',' read -ra ADDR <<< "$SERVERS_IPS"
           for SERVER_IP in "${ADDR[@]}"; do
-            echo "::set-output name=server_ip::$SERVER_IP"
+            echo "server_ip=$SERVER_IP" >> $GITHUB_ENV
+            
             IS_NEW=$(ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@$SERVER_IP "test -e ~/is_configured && echo 'no' || echo 'yes'")
             if [ "$IS_NEW" = "yes" ]; then
               echo "Server $SERVER_IP is new. Triggering new server deployment."
-              echo "::set-output name=new_server::true"
+              echo "new_server=true" >> $GITHUB_ENV
             fi
           done
         env:
           SERVER_USER: ${{ secrets.SERVER_USER }}
           SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
 
+      - name: Check New Server Status
+        run: |
+          if [ "${{ env.new_server }}" = "true" ]; then
+            echo "A new server deployment is triggered for IP: ${{ env.server_ip }}"
+          fi
+
       - name: Dispatch Deployment Workflows
-        if: steps.setup-job.outputs.new_server == 'true'
+        if: env.new_server == 'true'
         uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: Deploy New Server
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: master
-          inputs: '{"server_ip": "${{ steps.setup-job.outputs.server_ip }}"}'
+          inputs: '{"server_ip": "${{ env.server_ip }}"}'
 
       - name: Check Paths and Deploy
-        id: check-paths 
         run: |
           if git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep -q 'backend/'; then
             echo "Changes detected in backend. Dispatching backend deployment."
-            echo "::set-output name=deploy_backend::true"
+            echo "deploy_backend=true" >> $GITHUB_ENV
           fi
           if git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep -q 'frontend/'; then
             echo "Changes detected in frontend. Dispatching frontend deployment."
-            echo "::set-output name=deploy_frontend::true"
+            echo "deploy_frontend=true" >> $GITHUB_ENV
           fi
           if git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep -q 'statistics/'; then
             echo "Changes detected in statistics. Dispatching statistics deployment."
-            echo "::set-output name=deploy_statistics::true"
-          fi
+            echo "deploy_statistics=true" >> $GITHUB_ENV
 
       - name: Trigger Backend Deployment
-        if: steps.check-paths.outputs.deploy_backend == 'true'
+        if: env.deploy_backend == 'true'
         uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: Deploy Backend
@@ -67,7 +71,7 @@ jobs:
           ref: master
 
       - name: Trigger Frontend Deployment
-        if: steps.check-paths.outputs.deploy_frontend == 'true'
+        if: env.deploy_frontend == 'true'
         uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: Deploy Frontend
@@ -75,7 +79,7 @@ jobs:
           ref: master
 
       - name: Trigger Statistics Deployment
-        if: steps.check-paths.outputs.deploy_statistics == 'true'
+        if: env.deploy_statistics == 'true'
         uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: Deploy Statistics
