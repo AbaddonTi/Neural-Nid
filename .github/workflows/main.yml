@@ -16,24 +16,25 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
+    
       - name: Setup job for each server
         run: |
           SERVERS_IPS="${{ secrets.SERVERS_IPS }}"
           IFS=',' read -ra ADDR <<< "$SERVERS_IPS"
-          export SSHPASS=${{ secrets.SERVER_PASSWORD }}
+          echo "${{ secrets.SERVER_PASSWORD }}" > sshpass.txt
           for SERVER_IP in "${ADDR[@]}"; do
             echo "server_ip=$SERVER_IP" >> $GITHUB_ENV
             echo "Attempting to connect to $SERVER_IP with user ${{ secrets.SERVER_USER }}"
             
-            # Adding verbose logging to SSH command
-            IS_NEW=$(sshpass -e ssh -vvv -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@$SERVER_IP "test -e ~/is_configured && echo 'no' || echo 'yes'")
+            # Using sshpass with a password file
+            IS_NEW=$(sshpass -f sshpass.txt ssh -vvv -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@$SERVER_IP "test -e ~/is_configured && echo 'no' || echo 'yes'")
             echo "SSH command completed with status $?"
             if [ "$IS_NEW" = "yes" ]; then
               echo "Server $SERVER_IP is new. Triggering new server deployment."
               echo "new_server=true" >> $GITHUB_ENV
             fi
           done
+          rm -f sshpass.txt # Clean up
         env:
           SERVER_USER: ${{ secrets.SERVER_USER }}
 
