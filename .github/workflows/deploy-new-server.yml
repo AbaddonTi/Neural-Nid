@@ -19,35 +19,45 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
 
           script: |
-            set -e # Stop script execution on error
-          
+            set -euxo pipefail # Enable detailed debugging
+
             # Обновить все пакеты и зависимости
+            echo "Updating and upgrading packages"
             sudo apt-get update && sudo apt-get upgrade -y
             
             # Установка Git если не установлен
+            echo "Checking if Git is installed"
             if ! type git >/dev/null 2>&1; then
+              echo "Installing Git"
               sudo apt-get install git -y
             fi
 
             # Установка Docker
+            echo "Checking if Docker is installed"
             if ! type docker >/dev/null 2>&1; then
+              echo "Installing Docker"
               curl -fsSL https://get.docker.com -o get-docker.sh
               sudo sh get-docker.sh
               sudo usermod -aG docker ${{ secrets.SERVER_USER }}
             fi
 
             # Установка Docker Compose
+            echo "Checking if Docker Compose is installed"
             if [ ! -f /usr/local/bin/docker-compose ]; then
+              echo "Installing Docker Compose"
               sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
               sudo chmod +x /usr/local/bin/docker-compose
             fi
 
             # Проверка и создание Docker сети
+            echo "Checking for Docker network"
             if ! docker network ls | grep -q my-network; then
+              echo "Creating Docker network"
               docker network create my-network
             fi
 
             # Настройка ключей GitHub
+            echo "Setting up GitHub keys"
             if [ ! -f /root/.ssh/id_rsa ]; then
               mkdir -p /root/.ssh
               echo "${{ secrets.DEPLOY_KEY }}" > /root/.ssh/id_rsa
@@ -57,10 +67,12 @@ jobs:
             fi
 
             # Настройка Git
+            echo "Configuring Git"
             git config --global user.name "AbaddonTi"
             git config --global user.email "ctekta@gmail.com"
 
             # Клонирование или обновление репозитория
+            echo "Cloning or updating repository"
             REPO_PATH="/root/Neural-Nid"
             if [ ! -d "$REPO_PATH" ]; then
               git clone git@github.com:AbaddonTi/Neural-Nid.git $REPO_PATH
@@ -69,32 +81,34 @@ jobs:
               git pull
             fi
             
-            # Вызов deploy-backend.yml workflow
+            # Вызов дополнительных workflow
+            echo "Triggering backend deployment workflow"
             curl -X POST -H "Authorization: token ${{ secrets.PERSONAL_ACCESS_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/AbaddonTi/Neural-Nid/actions/workflows/deploy-backend.yml/dispatches" \
             -d '{"ref":"master"}'
-            
-            # Вызов deploy-frontend.yml workflow
+
+            echo "Triggering frontend deployment workflow"
             curl -X POST -H "Authorization: token ${{ secrets.PERSONAL_ACCESS_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/AbaddonTi/Neural-Nid/actions/workflows/deploy-frontend.yml/dispatches" \
             -d '{"ref":"master"}'
-            
-            # Вызов deploy-statistics.yml workflow
+
+            echo "Triggering statistics deployment workflow"
             curl -X POST -H "Authorization: token ${{ secrets.PERSONAL_ACCESS_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/AbaddonTi/Neural-Nid/actions/workflows/deploy-statistics.yml/dispatches" \
             -d '{"ref":"master"}'
 
-
             # Установка SSL сертификата
+            echo "Installing SSL certificate"
             if ! [ -f /etc/letsencrypt/live/neuronalnid.com/fullchain.pem ]; then
               sudo apt-get install certbot python3-certbot-nginx -y
               sudo certbot --nginx -d neuronalnid.com -d www.neuronalnid.com
             fi
 
             # Обновление конфигурации nginx
+            echo "Updating nginx configuration"
             if [ -f /root/Neural-Nid/backup/nginx/default ]; then
               sudo cp /root/Neural-Nid/backup/nginx/default /etc/nginx/sites-available/default
               sudo systemctl reload nginx
