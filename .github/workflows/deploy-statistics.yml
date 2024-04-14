@@ -1,0 +1,24 @@
+name: Deploy Statistics Service
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Sparse Checkout for Statistics
+        uses: actions/checkout@v2
+        with:
+          path: 'Neural-Nid'
+          sparse-checkout: 'statistics/*'
+
+      - name: Build and Deploy Statistics Container
+        run: |
+          cd Neural-Nid/statistics
+          docker stop statistics-collector || true
+          docker rm statistics-collector || true
+          docker build -t statistics-collector .
+          docker run -d --restart always --name statistics-collector --network=my-network -p 5600:5600 \
+            -v ~/Neural-Nid/logs:/app/logs \
+            statistics-collector
