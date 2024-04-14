@@ -1,5 +1,4 @@
 #!/bin/bash
-set -euxo pipefail
 
 echo "Checking for available updates"
 NEED_UPDATE=$(sudo apt-get upgrade -u -s | grep -P '^\d+ upgraded' | cut -d " " -f 1)
