@@ -22,15 +22,21 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: deployment-status
+        continue-on-error: true
 
       - name: Check Deployment Artifact
         id: check-artifact
         run: |
-          CONTENT=$(cat deployment-status/deployment_status.txt)
-          echo "Deployment status: $CONTENT"
-          if [[ "$CONTENT" == "failure" ]]; then
-            echo "Deployment failed. Stopping further actions."
-            exit 1
+          if [ -f deployment-status/deployment_status.txt ]; then
+            CONTENT=$(cat deployment-status/deployment_status.txt)
+            echo "Deployment status: $CONTENT"
+            if [[ "$CONTENT" == "failure" ]]; then
+              echo "Deployment failed. Stopping further actions."
+              exit 1
+            fi
+          else
+            echo "No deployment artifact found. Assuming server is new or needs redeployment."
+            echo "new_server=true" >> $GITHUB_ENV
           fi
 
   prepare-and-deploy:
@@ -48,22 +54,12 @@ jobs:
           for SERVER_IP in "${ADDR[@]}"; do
             echo "server_ip=$SERVER_IP" >> $GITHUB_ENV
             echo "Attempting to connect to $SERVER_IP with user ${{ secrets.SERVER_USER }}"
-            IS_NEW=$(sshpass -f sshpass.txt ssh -vvv -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@$SERVER_IP "test -e ~/is_configured && echo 'no' || echo 'yes'")
+            sshpass -f sshpass.txt ssh -vvv -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@$SERVER_IP "echo 'Connected'"
             echo "SSH command completed with status $?"
-            if [ "$IS_NEW" = "yes" ]; then
-              echo "Server $SERVER_IP is new. Triggering new server deployment."
-              echo "new_server=true" >> $GITHUB_ENV
-            fi
           done
           rm -f sshpass.txt # Clean up
         env:
           SERVER_USER: ${{ secrets.SERVER_USER }}
-
-      - name: Check New Server Status
-        run: |
-          if [ "${{ env.new_server }}" = "true" ]; then
-            echo "A new server deployment is triggered for IP: ${{ env.server_ip }}"
-          fi
 
       - name: Dispatch Deployment Workflows
         if: env.new_server == 'true'
@@ -88,34 +84,31 @@ jobs:
             echo "Changes detected in statistics. Dispatching statistics deployment."
             echo "deploy_statistics=true" >> $GITHUB_ENV
 
-      - name: Deploy Statistics
-        if: env.deploy_statistics == 'true'
+      - name: Deploy Components
+        if: ${{ env.deploy_backend }} || ${{ env.deploy_frontend }} || ${{ env.deploy_statistics }}
         run: |
-          cd Neural-Nid/statistics
-          docker stop statistics-collector || true
-          docker rm statistics-collector || true
-          docker build -t statistics-collector .
-          docker run -d --restart always --name statistics-collector --network=my-network -p 5600:5600 \
-            -v ~/Neural-Nid/logs:/app/logs \
-            statistics-collector
-
-      - name: Deploy Frontend
-        if: env.deploy_frontend == 'true'
-        run: |
-          cd Neural-Nid/frontend
-          docker stop neural-nid-frontend || true
-          docker rm neural-nid-frontend || true
-          docker build -t neural-nid-frontend .
-          docker run -d --restart always --network=my-network -p 8080:80 --name neural-nid-frontend neural-nid-frontend
-
-      - name: Deploy Backend
-        if: env.deploy_backend == 'true'
-        run: |
-          cd Neural-Nid/backend
-          docker stop neural-nid-backend || true
-          docker rm neural-nid-backend || true
-          docker build -t neural-nid-backend .
-          docker run -d --restart always --name neural-nid-backend --network=my-network -p 5500:5500 \
-            -e OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
-            -e STATISTICS_SERVICE_URL=http://statistics-collector:5600/log \
-            neural-nid-backend
+          if [ "${{ env.deploy_statistics }}" == "true" ]; then
+            cd Neural-Nid/statistics
+            docker stop statistics-collector || true
+            docker rm statistics-collector || true
+            docker build -t statistics-collector .
+            docker run -d --restart always --name statistics-collector --network=my-network -p 5600:5600 \
+              -v ~/Neural-Nid/logs:/app/logs \
+              statistics-collector
+          fi
+          if [ "${{ env.deploy_frontend }}" == "true" ]; then
+            cd Neural-Nid/frontend
+            docker stop neural-nid-frontend || true
+            docker rm neural-nid-frontend || true
+            docker build -t neural-nid-frontend .
+            docker run -d --restart always --network=my-network -p 8080:80 --name neural-nid-frontend neural-nid-frontend
+          fi
+          if [ "${{ env.deploy_backend }}" == "true" ]; then
+            cd Neural-Nid/backend
+            docker stop neural-nid-backend || true
+            docker rm neural-nid-backend || true
+            docker build -t neural-nid-backend .
+            docker run -d --restart always --name neural-nid-backend --network=my-network -p 5500:5500 \
+              -e OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
+              -e STATISTICS_SERVICE_URL=http://statistics-collector:5600/log \
+              neural-nid-backend
