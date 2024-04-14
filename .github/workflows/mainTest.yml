@@ -27,7 +27,7 @@ jobs:
           IFS=',' read -ra ADDR <<< "$SERVERS_IPS"
           for IP in "${ADDR[@]}"; do
             (
-              sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no $SERVER_USER@$IP <<EOF
+              sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no $SERVER_USER@$IP <<'EOF'
                 set -euxo pipefail
 
                 echo "Checking for available updates"
