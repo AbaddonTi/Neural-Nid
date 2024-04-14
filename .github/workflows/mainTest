@@ -1,0 +1,164 @@
+name: Deploy Workflow
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+      - 'statistics/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup SSH and Deploy to Servers
+        env:
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+        run: |
+          SERVERS_IPS="${{ secrets.SERVERS_IPS }}"
+          IFS=',' read -ra ADDR <<< "$SERVERS_IPS"
+          for IP in "${ADDR[@]}"; do
+            (
+              sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no $SERVER_USER@$IP <<'EOF'
+                set -euxo pipefail
+
+                echo "Checking for available updates"
+                NEED_UPDATE=$(sudo apt-get upgrade -u -s | grep -P '^\d+ upgraded' | cut -d " " -f 1)
+                if [[ "$NEED_UPDATE" != "0" ]]; then
+                    echo "Updating and upgrading packages as updates are available"
+                    sudo apt-get update && sudo apt-get upgrade -y
+                else
+                    echo "No updates are necessary at the moment"
+                fi
+
+                echo "Checking if Git is installed"
+                if ! type git >/dev/null 2>&1; then
+                  echo "Installing Git"
+                  sudo apt-get install git -y
+                fi
+
+                echo "Checking if Docker is installed"
+                if ! type docker >/dev/null 2>&1; then
+                  echo "Installing Docker"
+                  curl -fsSL https://get.docker.com -o get-docker.sh
+                  sudo sh get-docker.sh || exit 1
+                  sudo usermod -aG docker ${{ secrets.SERVER_USER }}
+                fi
+
+                echo "Checking if Docker Compose is installed"
+                if [ ! -f /usr/local/bin/docker-compose ]; then
+                  echo "Installing Docker Compose"
+                  COMPOSE_URL=\$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep browser_download_url | grep docker-compose-\$(uname -s)-\$(uname -m) | cut -d '"' -f 4)
+                  sudo curl -L \$COMPOSE_URL -o /usr/local/bin/docker-compose
+                  sudo chmod +x /usr/local/bin/docker-compose
+                fi
+
+                echo "Checking for Docker network"
+                if ! docker network ls | grep -q my-network; then
+                  echo "Creating Docker network"
+                  docker network create my-network || true
+                fi
+
+                echo "Setting up GitHub keys"
+                if [ ! -f /root/.ssh/id_rsa ]; then
+                  mkdir -p /root/.ssh
+                  echo "\$DEPLOY_KEY" > /root/.ssh/id_rsa
+                  chmod 600 /root/.ssh/id_rsa
+                  ssh-keyscan github.com >> /root/.ssh/known_hosts
+                  echo "Host github.com\n\tStrictHostKeyChecking no\n" >> /root/.ssh/config
+                fi
+
+                echo "Checking and setting Git configuration"
+                if [ -z "$(git config --global user.name)" ]; then
+                  echo "Configuring Git user name"
+                  git config --global user.name "AbaddonTi"
+                fi
+                if [ -z "$(git config --global user.email)" ]; then
+                  echo "Configuring Git user email"
+                  git config --global user.email "ctekta@gmail.com"
+                fi
+                
+                echo "Cloning or updating repository"
+                REPO_PATH="/root/Neural-Nid"
+                if [ ! -d "$REPO_PATH" ]; then
+                  git clone git@github.com:AbaddonTi/Neural-Nid.git $REPO_PATH || exit 1
+                else
+                  cd $REPO_PATH
+                  git fetch origin
+                  git reset --hard origin/master
+                  git pull origin master
+                fi
+
+                echo "Installing SSL certificate"
+                if ! [ -f /etc/letsencrypt/live/neuronalnid.com/fullchain.pem ]; then
+                  sudo apt-get install certbot python3-certbot-nginx -y
+                  sudo certbot --nginx -d neuronalnid.com -d www.neuronalnid.com
+                fi
+
+                echo "Checking nginx configuration for www.neuronalnid.com"
+                need_reload=false
+                
+                if [ -f /root/Neural-Nid/backup/nginx/default ] && ! grep -q "www.neuronalnid.com" /root/Neural-Nid/backup/nginx/default; then
+                  echo "Updating nginx configuration"
+                  sudo cp /root/Neural-Nid/backup/nginx/default /etc/nginx/sites-available/default
+                  need_reload=true
+                else
+                  echo "No update needed for nginx configuration"
+                fi
+                
+                echo "Checking nginx main configuration for rate limiting settings"
+                if [ -f /root/Neural-Nid/backup/nginx/nginx.conf ] && ! grep -q "limit_req_zone \$binary_remote_addr zone=my_api_limit:100m rate=10r/m;" /etc/nginx/nginx.conf; then
+                  echo "Updating nginx main configuration"
+                  sudo cp /root/Neural-Nid/backup/nginx/nginx.conf /etc/nginx/nginx.conf
+                  need_reload=true
+                else
+                  echo "No update needed for nginx main configuration"
+                fi
+                
+                if [ "$need_reload" = true ]; then
+                  echo "Reloading nginx to apply new configurations"
+                  sudo systemctl reload nginx
+                else
+                  echo "No changes made to nginx configuration, no reload needed"
+                fi
+
+                echo "Server setup complete successfully"
+
+                # Build and run backend
+                cd ~/Neural-Nid/backend
+                docker stop neural-nid-backend || true
+                docker rm neural-nid-backend || true
+                docker build -t neural-nid-backend .
+                docker run -d --restart always --name neural-nid-backend --network=my-network -p 5500:5500 \
+                  -e OPENAI_API_KEY=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 \
+                  -e STATISTICS_SERVICE_URL=http://statistics-collector:5600/log \
+                  neural-nid-backend
+
+                # Build and run statistics service
+                cd ~/Neural-Nid/statistics
+                docker stop statistics-collector || true
+                docker rm statistics-collector || true
+                docker build -t statistics-collector .
+                docker run -d --restart always --name statistics-collector --network=my-network -p 5600:5600 \
+                  -v ~/Neural-Nid/logs:/app/logs \
+                  statistics-collector
+
+                # Build and run frontend
+                cd ~/Neural-Nid/frontend
+                docker stop neural-nid-frontend || true
+                docker rm neural-nid-frontend || true
+                docker build -t neural-nid-frontend .
+                docker run -d --restart always --network=my-network -p 8080:80 --name neural-nid-frontend neural-nid-frontend
+
+              EOF
+            ) &
+          done
+          wait
