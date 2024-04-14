@@ -70,7 +70,7 @@ fi
 echo "Installing SSL certificate"
 if ! [ -f /etc/letsencrypt/live/neuronalnid.com/fullchain.pem ]; then
   sudo apt-get install certbot python3-certbot-nginx -y
-  sudo certbot --nginx -d neuronalnid.com -d www.neuronalnid.com
+  sudo certbot --nginx -d neuronalnid.com -d www.neuronalnid.com -m grigorii.kulkov@brassart.fr --agree-tos --non-interactive
 fi
 
 echo "Checking nginx configuration for www.neuronalnid.com"
