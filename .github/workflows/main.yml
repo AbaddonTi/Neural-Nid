@@ -32,7 +32,7 @@ jobs:
           done
         env:
           SERVER_USER: ${{ secrets.SERVER_USER }}
-          SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
+          SERVER_PASSWORD: '${{ secrets.SERVER_PASSWORD }}'
 
       - name: Check New Server Status
         run: |
