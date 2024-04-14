@@ -24,7 +24,7 @@ jobs:
           for SERVER_IP in "${ADDR[@]}"; do
             echo "server_ip=$SERVER_IP" >> $GITHUB_ENV
             
-            IS_NEW=$(ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@$SERVER_IP "test -e ~/is_configured && echo 'no' || echo 'yes'")
+            IS_NEW=$(sshpass -p ${{ secrets.SERVER_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@$SERVER_IP "test -e ~/is_configured && echo 'no' || echo 'yes'")
             if [ "$IS_NEW" = "yes" ]; then
               echo "Server $SERVER_IP is new. Triggering new server deployment."
               echo "new_server=true" >> $GITHUB_ENV
@@ -32,7 +32,8 @@ jobs:
           done
         env:
           SERVER_USER: ${{ secrets.SERVER_USER }}
-          SERVER_PASSWORD: '${{ secrets.SERVER_PASSWORD }}'
+          SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
+
 
       - name: Check New Server Status
         run: |
