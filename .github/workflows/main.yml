@@ -9,14 +9,37 @@ on:
       - 'frontend/**'
       - 'statistics/**'
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Deploy New Server"]
+    types:
+      - completed
 
 jobs:
+  check-deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Deployment Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: deployment-status
+
+      - name: Check Deployment Artifact
+        id: check-artifact
+        run: |
+          CONTENT=$(cat deployment-status/deployment_status.txt)
+          echo "Deployment status: $CONTENT"
+          if [[ "$CONTENT" == "failure" ]]; then
+            echo "Deployment failed. Stopping further actions."
+            exit 1
+          fi
+
   prepare-and-deploy:
+    needs: check-deployment
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-    
+        
       - name: Setup job for each server
         run: |
           SERVERS_IPS="${{ secrets.SERVERS_IPS }}"
@@ -25,8 +48,6 @@ jobs:
           for SERVER_IP in "${ADDR[@]}"; do
             echo "server_ip=$SERVER_IP" >> $GITHUB_ENV
             echo "Attempting to connect to $SERVER_IP with user ${{ secrets.SERVER_USER }}"
-            
-            # Using sshpass with a password file
             IS_NEW=$(sshpass -f sshpass.txt ssh -vvv -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@$SERVER_IP "test -e ~/is_configured && echo 'no' || echo 'yes'")
             echo "SSH command completed with status $?"
             if [ "$IS_NEW" = "yes" ]; then
@@ -67,26 +88,34 @@ jobs:
             echo "Changes detected in statistics. Dispatching statistics deployment."
             echo "deploy_statistics=true" >> $GITHUB_ENV
 
-      - name: Trigger Backend Deployment
-        if: env.deploy_backend == 'true'
-        uses: benc-uk/workflow-dispatch@v1
-        with:
-          workflow: Deploy Backend
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          ref: master
-
-      - name: Trigger Frontend Deployment
-        if: env.deploy_frontend == 'true'
-        uses: benc-uk/workflow-dispatch@v1
-        with:
-          workflow: Deploy Frontend
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          ref: master
-
-      - name: Trigger Statistics Deployment
+      - name: Deploy Statistics
         if: env.deploy_statistics == 'true'
-        uses: benc-uk/workflow-dispatch@v1
-        with:
-          workflow: Deploy Statistics
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          ref: master
+        run: |
+          cd Neural-Nid/statistics
+          docker stop statistics-collector || true
+          docker rm statistics-collector || true
+          docker build -t statistics-collector .
+          docker run -d --restart always --name statistics-collector --network=my-network -p 5600:5600 \
+            -v ~/Neural-Nid/logs:/app/logs \
+            statistics-collector
+
+      - name: Deploy Frontend
+        if: env.deploy_frontend == 'true'
+        run: |
+          cd Neural-Nid/frontend
+          docker stop neural-nid-frontend || true
+          docker rm neural-nid-frontend || true
+          docker build -t neural-nid-frontend .
+          docker run -d --restart always --network=my-network -p 8080:80 --name neural-nid-frontend neural-nid-frontend
+
+      - name: Deploy Backend
+        if: env.deploy_backend == 'true'
+        run: |
+          cd Neural-Nid/backend
+          docker stop neural-nid-backend || true
+          docker rm neural-nid-backend || true
+          docker build -t neural-nid-backend .
+          docker run -d --restart always --name neural-nid-backend --network=my-network -p 5500:5500 \
+            -e OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
+            -e STATISTICS_SERVICE_URL=http://statistics-collector:5600/log \
+            neural-nid-backend
