@@ -28,7 +28,8 @@ jobs:
           for IP in "${ADDR[@]}"; do
             (
               # Use sshpass to pass the SSH password and execute the script
-              sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no $SERVER_USER@$IP "bash -s" < ./test.sh > deploy_log_$IP.txt 2>&1
+              OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}"
+              sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no $SERVER_USER@$IP "export OPENAI_API_KEY=$OPENAI_API_KEY && bash -s" < ./test.sh
             ) &
           done
           wait
