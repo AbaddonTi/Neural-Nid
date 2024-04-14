@@ -49,7 +49,7 @@ jobs:
         uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: Deploy New Server
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           ref: master
           inputs: '{"server_ip": "${{ env.server_ip }}"}'
 
@@ -72,7 +72,7 @@ jobs:
         uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: Deploy Backend
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           ref: master
 
       - name: Trigger Frontend Deployment
@@ -80,7 +80,7 @@ jobs:
         uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: Deploy Frontend
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           ref: master
 
       - name: Trigger Statistics Deployment
@@ -88,5 +88,5 @@ jobs:
         uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: Deploy Statistics
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           ref: master
