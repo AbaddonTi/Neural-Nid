@@ -28,7 +28,13 @@ jobs:
           for IP in "${ADDR[@]}"; do
             (
               # Use sshpass to pass the SSH password and execute the script
-              sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no $SERVER_USER@$IP "bash -s" < ./test.sh
+              sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no $SERVER_USER@$IP "bash -s" < ./test.sh > deploy_log_$IP.txt 2>&1
             ) &
           done
           wait
+          # Display logs
+          for IP in "${ADDR[@]}"; do
+            echo "Logs for server $IP:"
+            cat deploy_log_$IP.txt
+          done
+
