@@ -29,7 +29,7 @@ jobs:
             (
               # Use sshpass to pass the SSH password and execute the script
               OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}"
-              sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no $SERVER_USER@$IP "export OPENAI_API_KEY=$OPENAI_API_KEY && bash -s" < ./test.sh
+              sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no $SERVER_USER@$IP "export OPENAI_API_KEY=$OPENAI_API_KEY && bash -s" < ./CI_CD.sh
             ) &
           done
           wait
