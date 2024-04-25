@@ -71,8 +71,7 @@ jobs:
                 echo 'Checking if Docker Compose is installed'
                 if [ ! -f /usr/local/bin/docker-compose ]; then
                   echo 'Installing Docker Compose'
-                  DOCKER_COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep tag_name | cut -d '"' -f 4)
-                  COMPOSE_URL="https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)"
+                  COMPOSE_URL="https://github.com/docker/compose/releases/download/2.27.0/docker-compose-$(uname -s)-$(uname -m)"
                   sudo curl -L $COMPOSE_URL -o /usr/local/bin/docker-compose
                   sudo chmod +x /usr/local/bin/docker-compose
                 fi
@@ -136,10 +135,18 @@ jobs:
                 fi
                 
                 
-                echo "Installing SSL certificate"
-                if ! [ -f /etc/letsencrypt/live/neuronalnid.com/fullchain.pem ]; then
-                  sudo apt-get install certbot python3-certbot-nginx -y
-                  sudo certbot --nginx -d neuronalnid.com -d www.neuronalnid.com -m grigorii.kulkov@brassart.fr --agree-tos --non-interactive
+                echo "Preparing to install SSL certificate"
+                SERVER_IP=$(curl -s http://icanhazip.com)
+                DOMAIN_IP=$(dig +short neuronalnid.com)
+                
+                if [[ "$DOMAIN_IP" == "$SERVER_IP" ]]; then
+                  echo "Domain points to the server IP, proceeding with SSL setup"
+                  if ! [ -f /etc/letsencrypt/live/neuronalnid.com/fullchain.pem ]; then
+                    sudo apt-get install certbot python3-certbot-nginx -y
+                    sudo certbot --nginx -d neuronalnid.com -d www.neuronalnid.com --agree-tos --non-interactive
+                  fi
+                else
+                  echo "Domain does not point to this server IP, skipping SSL setup"
                 fi
                 
                 echo "Checking nginx configuration for www.neuronalnid.com"
@@ -166,7 +173,7 @@ jobs:
                 fi
                 
                 echo "Server setup complete successfully"
-                
+
                 
                 # Build and run backend
                 cd ~/Neural-Nid/backend
