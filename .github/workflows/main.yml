@@ -38,7 +38,6 @@ jobs:
               sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SERVER_USER}@${IP} "
 
                 echo 'Checking for available updates'
-                set -x  # Включить режим отладки
 
                 NEED_UPDATE=\$(sudo apt-get upgrade -u -s | grep -P '^\\d+ upgraded' | cut -d ' ' -f 1)
                 if [[ \"\$NEED_UPDATE\" != '0' ]]; then
@@ -127,7 +126,6 @@ jobs:
                   git reset --hard origin/master
                   if [ $? -ne 0 ]; then
                     echo 'Failed to reset repository. Exiting...'
-                    exit 1
                   fi
                 else
                   echo 'Repository does not exist, unpacking archive...'
@@ -136,13 +134,11 @@ jobs:
                   tar -xzf ../deploy.tar.gz
                   if [ $? -ne 0 ]; then
                     echo 'Failed to unpack archive. Exiting...'
-                    exit 1
                   fi
                 fi
                 rm ../deploy.tar.gz
                 if [ $? -ne 0 ]; then
                   echo 'Failed to remove archive. Exiting...'
-                  exit 1
                 fi
 
 
