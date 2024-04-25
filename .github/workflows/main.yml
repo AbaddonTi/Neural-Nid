@@ -28,15 +28,14 @@ jobs:
         run: |
           rsync -a --delete ./ /tmp/snapshot/
           tar -czf deploy.tar.gz -C /tmp/snapshot .
-          export SSHPASS=${{ secrets.SERVER_PASSWORD }}
           export DEPLOY_KEY=$DEPLOY_KEY
           export ID_RSA_PUB=$ID_RSA_PUB
           IFS=',' read -ra ADDR <<< "$SERVERS_IPS"
           for IP in "${ADDR[@]}"; do
             (
               echo "Connecting to $IP"
-              sshpass -e scp -o StrictHostKeyChecking=no deploy.tar.gz ${SERVER_USER}@${IP}:/root/
-              sshpass -e ssh -o StrictHostKeyChecking=no ${SERVER_USER}@${IP} "
+              sshpass -p "${SERVER_PASSWORD}" scp -o StrictHostKeyChecking=no deploy.tar.gz ${SERVER_USER}@${IP}:/root/
+              sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SERVER_USER}@${IP} "
                 cd /root
                 if [ -d Neural-Nid ]; then
                   echo 'Repository exists, pulling updates...'
