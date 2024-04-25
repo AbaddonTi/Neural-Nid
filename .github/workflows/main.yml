@@ -113,6 +113,12 @@ jobs:
                   git config --global user.email "ctekta@gmail.com"
                 fi
                 
+                echo "Switching to root directory"
+                cd /root || {
+                  echo "Failed to switch to root directory, aborting"
+                  exit 1
+                }
+                
                 echo "Cloning or updating repository"
                 REPO_PATH="/root/Neural-Nid"
                 if [ ! -d "$REPO_PATH" ]; then
@@ -129,9 +135,14 @@ jobs:
                     exit 1
                   }
                 fi
+                
+                echo "Entering the repository directory"
+                cd $REPO_PATH || {
+                  echo "Failed to enter the repository directory, aborting"
+                  exit 1
+                }
 
-                
-                
+
                 echo "Preparing to install SSL certificate"
                 SERVER_IP=$(curl -s http://icanhazip.com)
                 DOMAIN_IP=$(dig +short neuronalnid.com)
