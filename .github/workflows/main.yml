@@ -71,10 +71,12 @@ jobs:
                 echo 'Checking if Docker Compose is installed'
                 if [ ! -f /usr/local/bin/docker-compose ]; then
                   echo 'Installing Docker Compose'
-                  COMPOSE_URL=\$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep browser_download_url | grep docker-compose-\$(uname -s)-\$(uname -m) | cut -d '\"' -f 4)
-                  sudo curl -L \$COMPOSE_URL -o /usr/local/bin/docker-compose
+                  DOCKER_COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep tag_name | cut -d '"' -f 4)
+                  COMPOSE_URL="https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)"
+                  sudo curl -L $COMPOSE_URL -o /usr/local/bin/docker-compose
                   sudo chmod +x /usr/local/bin/docker-compose
                 fi
+
 
                 echo 'Checking for Docker network'
                 if ! docker network ls | grep -q my-network; then
