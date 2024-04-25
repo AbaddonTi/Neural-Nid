@@ -26,29 +26,40 @@ jobs:
           SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
           SERVERS_IPS: ${{ secrets.SERVERS_IPS }}
         run: |
-          tar -czf deploy.tar.gz ./path/to/folder
+          tar -czf deploy.tar.gz .
           export DEPLOY_KEY=$DEPLOY_KEY
           export ID_RSA_PUB=$ID_RSA_PUB
           IFS=',' read -ra ADDR <<< "$SERVERS_IPS"
           for IP in "${ADDR[@]}"; do
             (
               echo "Connecting to $IP"
-              sshpass -e scp -o StrictHostKeyChecking=no deploy.tar.gz ${SERVER_USER}@${IP}:/path/to/destination
+              sshpass -e scp -o StrictHostKeyChecking=no deploy.tar.gz ${SERVER_USER}@${IP}:/root/
               sshpass -e ssh -o StrictHostKeyChecking=no ${SERVER_USER}@${IP} "
-
                 cd /root
-                if [ -d .git ]; then
+                if [ -d Neural-Nid ]; then
                   echo 'Repository exists, pulling updates...'
-                    cd /root/Neural-Nid
-                    git fetch origin
-                    git reset --hard origin/master
+                  cd Neural-Nid
+                  git fetch origin
+                  git reset --hard origin/master
+                  if [ $? -ne 0 ]; then
+                    echo 'Failed to reset repository. Exiting...'
+                    exit 1
+                  fi
                 else
-                  echo 'Repository does not exist, cloning...'
-                  git clone git@github.com:AbaddonTi/Neural-Nid.git
-                  cd /root/Neural-Nid
+                  echo 'Repository does not exist, unpacking archive...'
+                  mkdir Neural-Nid
+                  cd Neural-Nid
+                  tar -xzf ../deploy.tar.gz
+                  if [ $? -ne 0 ]; then
+                    echo 'Failed to unpack archive. Exiting...'
+                    exit 1
+                  fi
                 fi
-                tar -xzf deploy.tar.gz 
-                rm deploy.tar.gz
+                rm ../deploy.tar.gz
+                if [ $? -ne 0 ]; then
+                  echo 'Failed to remove archive. Exiting...'
+                  exit 1
+                fi
 
               
                 echo 'Checking for available updates'
