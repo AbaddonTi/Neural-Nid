@@ -71,15 +71,11 @@ jobs:
                 echo 'Checking if Docker Compose is installed'
                 if [ ! -f /usr/local/bin/docker-compose ]; then
                   echo 'Installing Docker Compose'
-                  COMPOSE_URL="https://github.com/docker/compose/releases/download/2.27.0/docker-compose-\$(uname -s)-\$(uname -m)"
-                  sudo curl -L \$COMPOSE_URL -o /usr/local/bin/docker-compose
-                  if [ -f /usr/local/bin/docker-compose ]; then
-                    sudo chmod +x /usr/local/bin/docker-compose
-                  else
-                    echo "Failed to download Docker Compose"
-                    exit 1
-                  fi
+                  COMPOSE_URL="https://github.com/docker/compose/releases/download/2.27.0/docker-compose-$(uname -s)-$(uname -m)"
+                  sudo curl -L $COMPOSE_URL -o /usr/local/bin/docker-compose
+                  sudo chmod +x /usr/local/bin/docker-compose
                 fi
+
 
                 echo 'Checking for Docker network'
                 if ! docker network ls | grep -q my-network; then
