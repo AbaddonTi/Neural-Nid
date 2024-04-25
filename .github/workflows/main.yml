@@ -13,6 +13,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+      ID_RSA_PUB: ${{ secrets.ID_RSA_PUB }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -22,8 +25,9 @@ jobs:
           SERVER_USER: ${{ secrets.SERVER_USER }}
           SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
           SERVERS_IPS: ${{ secrets.SERVERS_IPS }}
-
         run: |
+          export DEPLOY_KEY=$DEPLOY_KEY
+          export ID_RSA_PUB=$ID_RSA_PUB
           IFS=',' read -ra ADDR <<< "$SERVERS_IPS"
           for IP in "${ADDR[@]}"; do
             (
