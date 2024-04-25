@@ -36,33 +36,7 @@ jobs:
               echo "Connecting to $IP"
               sshpass -p "${SERVER_PASSWORD}" scp -o StrictHostKeyChecking=no deploy.tar.gz ${SERVER_USER}@${IP}:/root/
               sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SERVER_USER}@${IP} "
-                cd /root
-                if [ -d Neural-Nid ]; then
-                  echo 'Repository exists, pulling updates...'
-                  cd Neural-Nid
-                  git fetch origin
-                  git reset --hard origin/master
-                  if [ $? -ne 0 ]; then
-                    echo 'Failed to reset repository. Exiting...'
-                    exit 1
-                  fi
-                else
-                  echo 'Repository does not exist, unpacking archive...'
-                  mkdir Neural-Nid
-                  cd Neural-Nid
-                  tar -xzf ../deploy.tar.gz
-                  if [ $? -ne 0 ]; then
-                    echo 'Failed to unpack archive. Exiting...'
-                    exit 1
-                  fi
-                fi
-                rm ../deploy.tar.gz
-                if [ $? -ne 0 ]; then
-                  echo 'Failed to remove archive. Exiting...'
-                  exit 1
-                fi
 
-              
                 echo 'Checking for available updates'
                 set -x  # Включить режим отладки
 
@@ -142,6 +116,33 @@ jobs:
                 if [ -z "$(git config --global user.email)" ]; then
                   echo "Configuring Git user email"
                   git config --global user.email "ctekta@gmail.com"
+                fi
+
+                echo "Checking and setting Git repositorie"
+                cd /root
+                if [ -d Neural-Nid ]; then
+                  echo 'Repository exists, pulling updates...'
+                  cd Neural-Nid
+                  git fetch origin
+                  git reset --hard origin/master
+                  if [ $? -ne 0 ]; then
+                    echo 'Failed to reset repository. Exiting...'
+                    exit 1
+                  fi
+                else
+                  echo 'Repository does not exist, unpacking archive...'
+                  mkdir Neural-Nid
+                  cd Neural-Nid
+                  tar -xzf ../deploy.tar.gz
+                  if [ $? -ne 0 ]; then
+                    echo 'Failed to unpack archive. Exiting...'
+                    exit 1
+                  fi
+                fi
+                rm ../deploy.tar.gz
+                if [ $? -ne 0 ]; then
+                  echo 'Failed to remove archive. Exiting...'
+                  exit 1
                 fi
 
 
