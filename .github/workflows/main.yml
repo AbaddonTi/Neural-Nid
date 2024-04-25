@@ -141,7 +141,6 @@ jobs:
                   echo 'Failed to remove archive. Exiting...'
                 fi
 
-
                 echo "Preparing to install SSL certificate"
                 SERVER_IP=$(curl -s http://icanhazip.com)
                 DOMAIN_IP=$(dig +short neuronalnid.com)
@@ -151,6 +150,8 @@ jobs:
                   if ! [ -f /etc/letsencrypt/live/neuronalnid.com/fullchain.pem ]; then
                     sudo apt-get install certbot python3-certbot-nginx -y
                     sudo certbot --nginx -d neuronalnid.com -d www.neuronalnid.com --agree-tos --non-interactive
+                  else
+                    echo "SSL certificate already installed, skipping installation"
                   fi
                 else
                   echo "Domain does not point to this server IP, skipping SSL setup"
@@ -181,7 +182,7 @@ jobs:
                 
                 echo "Server setup complete successfully"
 
-                
+
                 # Build and run backend
                 cd ~/Neural-Nid/backend
                 docker stop neural-nid-backend || true
