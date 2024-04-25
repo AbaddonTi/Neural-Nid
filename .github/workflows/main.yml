@@ -113,33 +113,35 @@ jobs:
                   git config --global user.email "ctekta@gmail.com"
                 fi
                 
-                echo "Switching to root directory"
+                echo "Переключение в корневую директорию"
                 cd /root || {
-                  echo "Failed to switch to root directory, aborting"
+                  echo "Не удалось перейти в корневую директорию, прерывание"
                   exit 1
                 }
                 
-                echo "Cloning or updating repository"
+                echo "Клонирование или обновление репозитория"
                 REPO_PATH="/root/Neural-Nid"
                 if [ -d "$REPO_PATH" ]; then
-                  echo "Repository directory exists, updating now"
+                  echo "Директория репозитория существует, обновление"
                   cd $REPO_PATH
                   if [ -d ".git" ]; then
+                    echo "Обновление репозитория"
                     git fetch origin && git reset --hard origin/master && git pull origin master || {
-                      echo "Failed to update the repository, aborting"
+                      echo "Не удалось обновить репозиторий, прерывание"
                       exit 1
                     }
                   else
-                    echo "Directory is not a Git repository"
+                    echo "Директория не является репозиторием Git"
                     exit 1
                   fi
                 else
-                  echo "Repository directory does not exist, attempting to clone"
+                  echo "Директория репозитория не существует, попытка клонирования"
                   git clone git@github.com:AbaddonTi/Neural-Nid.git $REPO_PATH || {
-                    echo "Failed to clone the repository, aborting"
+                    echo "Не удалось клонировать репозиторий, прерывание"
                     exit 1
                   }
                 fi
+
                 
                 echo "Operation completed successfully"
                 
