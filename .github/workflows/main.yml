@@ -26,7 +26,8 @@ jobs:
           SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
           SERVERS_IPS: ${{ secrets.SERVERS_IPS }}
         run: |
-          tar -czf deploy.tar.gz .
+          rsync -a --delete ./ /tmp/snapshot/
+          tar -czf deploy.tar.gz -C /tmp/snapshot .
           export DEPLOY_KEY=$DEPLOY_KEY
           export ID_RSA_PUB=$ID_RSA_PUB
           IFS=',' read -ra ADDR <<< "$SERVERS_IPS"
