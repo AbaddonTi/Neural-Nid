@@ -181,8 +181,8 @@ jobs:
                 fi
                 
                 echo "Server setup complete successfully"
-
-
+                
+                
                 # Build and run backend
                 cd ~/Neural-Nid/backend
                 docker stop neural-nid-backend || true
