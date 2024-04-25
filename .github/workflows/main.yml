@@ -90,8 +90,6 @@ jobs:
                 fi
 
 
-
-                
                 # Adding GitHub to known hosts if not already added
                 if ! grep -q "github.com" /root/.ssh/known_hosts; then
                   echo "Adding GitHub to known hosts"
@@ -118,13 +116,20 @@ jobs:
                 echo "Cloning or updating repository"
                 REPO_PATH="/root/Neural-Nid"
                 if [ ! -d "$REPO_PATH" ]; then
-                  git clone git@github.com:AbaddonTi/Neural-Nid.git $REPO_PATH || exit 1
+                  echo "Attempting to clone the repository"
+                  git clone git@github.com:AbaddonTi/Neural-Nid.git $REPO_PATH || {
+                    echo "Failed to clone the repository, aborting"
+                    exit 1
+                  }
                 else
+                  echo "Repository exists, updating now"
                   cd $REPO_PATH
-                  git fetch origin
-                  git reset --hard origin/master
-                  git pull origin master
+                  git fetch origin && git reset --hard origin/master && git pull origin master || {
+                    echo "Failed to update the repository, aborting"
+                    exit 1
+                  }
                 fi
+
                 
                 
                 echo "Preparing to install SSL certificate"
