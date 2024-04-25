@@ -114,6 +114,7 @@ jobs:
                   echo "Configuring Git user email"
                   git config --global user.email "ctekta@gmail.com"
                 fi
+
                 
                 echo "Переключение в корневую директорию"
                 cd /root || {
@@ -123,28 +124,31 @@ jobs:
                 
                 echo "Клонирование или обновление репозитория"
                 REPO_PATH="/root/Neural-Nid"
-                if [ -d "$REPO_PATH" ]; then  # Проверяем, существует ли вообще директория
+                if [ -d "$REPO_PATH" ]; then
                   echo "Директория репозитория существует, проверка на Git репозиторий"
                   cd $REPO_PATH
-                  if [ -d ".git" ]; then  # Только если .git существует, мы пытаемся обновить репозиторий
+                  if [ -d ".git" ]; then
                     echo "Обновление репозитория"
                     git fetch origin && git reset --hard origin/master && git pull origin master || {
                       echo "Не удалось обновить репозиторий, прерывание"
                       exit 1
                     }
                   else
-                    echo "Директория не является репозиторием Git"
-                    exit 1
+                    echo "Директория не является репозиторием Git, начинаем клонирование"
+                    cd /root  # Возвращаемся в корневую директорию перед клонированием
+                    rm -rf $REPO_PATH  # Удаляем папку, так как она не содержит репозиторий
+                    git clone git@github.com:AbaddonTi/Neural-Nid.git $REPO_PATH || {
+                      echo "Не удалось клонировать репозиторий, прерывание"
+                      exit 1
+                    }
                   fi
                 else
-                  echo "Директория репозитория не существует, попытка клонирования"
+                  echo "Директория репозитория не существует, клонирование"
                   git clone git@github.com:AbaddonTi/Neural-Nid.git $REPO_PATH || {
                     echo "Не удалось клонировать репозиторий, прерывание"
                     exit 1
                   }
                 fi
-
-
 
                 echo "Preparing to install SSL certificate"
                 SERVER_IP=$(curl -s http://icanhazip.com)
