@@ -15,27 +15,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup SSH and Deploy to Servers
         env:
           SERVER_USER: ${{ secrets.SERVER_USER }}
           SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
-          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          SERVERS_IPS: ${{ secrets.SERVERS_IPS }}
         run: |
-          SERVERS_IPS="${{ secrets.SERVERS_IPS }}"
           IFS=',' read -ra ADDR <<< "$SERVERS_IPS"
           for IP in "${ADDR[@]}"; do
             (
-              # Use sshpass to pass the SSH password and execute the script
-              OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}"
-              sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no $SERVER_USER@$IP "export OPENAI_API_KEY=$OPENAI_API_KEY && bash -s" < ./CI_CD.sh
+              echo "Connecting to $IP"
+              sshpass -p "${SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no $SERVER_USER@$IP "
+                echo 'Checking for available updates'
+                NEED_UPDATE=\$(sudo apt-get upgrade -u -s | grep -P '^\\d+ upgraded' | cut -d ' ' -f 1)
+                if [[ \"\$NEED_UPDATE\" != '0' ]]; then
+                  echo 'Updating and upgrading packages as updates are available'
+                  sudo apt-get update && sudo apt-get upgrade -y
+                else
+                  echo 'No updates are necessary at the moment'
+                fi
+
+                echo 'Checking if Git is installed'
+                if ! type git >/dev/null 2>&1; then
+                  echo 'Installing Git'
+                  sudo apt-get install git -y
+                fi
+              "
             ) &
           done
           wait
-          # Display logs
-          for IP in "${ADDR[@]}"; do
-            echo "Logs for server $IP:"
-            cat deploy_log_$IP.txt
-          done
-
