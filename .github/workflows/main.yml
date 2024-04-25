@@ -74,20 +74,21 @@ jobs:
                   docker network create my-network || true
                 fi
                 
-
+                
                 echo "Setting up GitHub SSH keys"
                 if [ ! -f /root/.ssh/id_rsa ] || [ ! -s /root/.ssh/id_rsa ]; then
                   echo "Private key not found or empty, creating or replacing it"
                   mkdir -p /root/.ssh
-                  printf "%b" "$DEPLOY_KEY" > /root/.ssh/id_rsa
+                  echo '$DEPLOY_KEY' > /root/.ssh/id_rsa
                   chmod 600 /root/.ssh/id_rsa
                 fi
-
+                
                 if [ ! -f /root/.ssh/id_rsa.pub ] || [ ! -s /root/.ssh/id_rsa.pub ]; then
                   echo "Public key not found or empty, creating or replacing it"
-                  printf "%b" "$ID_RSA_PUB" > /root/.ssh/id_rsa.pub
+                  echo '$ID_RSA_PUB' > /root/.ssh/id_rsa.pub
                   chmod 644 /root/.ssh/id_rsa.pub
                 fi
+
 
 
                 
