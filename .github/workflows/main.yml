@@ -121,20 +121,27 @@ jobs:
                 
                 echo "Cloning or updating repository"
                 REPO_PATH="/root/Neural-Nid"
-                if [ ! -d "$REPO_PATH" ]; then
-                  echo "Attempting to clone the repository"
+                if [ -d "$REPO_PATH" ]; then
+                  echo "Repository directory exists, updating now"
+                  cd $REPO_PATH
+                  if [ -d ".git" ]; then
+                    git fetch origin && git reset --hard origin/master && git pull origin master || {
+                      echo "Failed to update the repository, aborting"
+                      exit 1
+                    }
+                  else
+                    echo "Directory is not a Git repository"
+                    exit 1
+                  fi
+                else
+                  echo "Repository directory does not exist, attempting to clone"
                   git clone git@github.com:AbaddonTi/Neural-Nid.git $REPO_PATH || {
                     echo "Failed to clone the repository, aborting"
                     exit 1
                   }
-                else
-                  echo "Repository exists, updating now"
-                  cd $REPO_PATH
-                  git fetch origin && git reset --hard origin/master && git pull origin master || {
-                    echo "Failed to update the repository, aborting"
-                    exit 1
-                  }
                 fi
+                
+                echo "Operation completed successfully"
                 
                 echo "Entering the repository directory"
                 cd $REPO_PATH || {
