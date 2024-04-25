@@ -85,20 +85,23 @@ jobs:
                 
 
                 echo "Setting up GitHub SSH keys"
-                # Checking and setting up private key
                 if [ ! -f /root/.ssh/id_rsa ] || [ ! -s /root/.ssh/id_rsa ]; then
                   echo "Private key not found or empty, creating or replacing it"
                   mkdir -p /root/.ssh
-                  echo "$DEPLOY_KEY" > /root/.ssh/id_rsa
+                  cat > /root/.ssh/id_rsa <<EOF
+                $DEPLOY_KEY
+                EOF
                   chmod 600 /root/.ssh/id_rsa
                 fi
-                
-                # Checking and setting up public key
+
                 if [ ! -f /root/.ssh/id_rsa.pub ] || [ ! -s /root/.ssh/id_rsa.pub ]; then
                   echo "Public key not found or empty, creating or replacing it"
-                  echo "$ID_RSA_PUB" > /root/.ssh/id_rsa.pub
+                  cat > /root/.ssh/id_rsa.pub <<EOF
+                $ID_RSA_PUB
+                EOF
                   chmod 644 /root/.ssh/id_rsa.pub
                 fi
+
                 
                 # Adding GitHub to known hosts if not already added
                 if ! grep -q "github.com" /root/.ssh/known_hosts; then
