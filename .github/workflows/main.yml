@@ -121,6 +121,12 @@ jobs:
                   exit 1
                 }
                 
+                echo "Переключение в корневую директорию"
+                cd /root || {
+                  echo "Не удалось перейти в корневую директорию, прерывание"
+                  exit 1
+                }
+                
                 echo "Клонирование или обновление репозитория"
                 REPO_PATH="/root/Neural-Nid"
                 if [ -d "$REPO_PATH" ]; then
@@ -143,15 +149,6 @@ jobs:
                     exit 1
                   }
                 fi
-
-                
-                echo "Operation completed successfully"
-                
-                echo "Entering the repository directory"
-                cd $REPO_PATH || {
-                  echo "Failed to enter the repository directory, aborting"
-                  exit 1
-                }
 
 
                 echo "Preparing to install SSL certificate"
