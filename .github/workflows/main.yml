@@ -140,47 +140,6 @@ jobs:
                 if [ $? -ne 0 ]; then
                   echo 'Failed to remove archive. Exiting...'
                 fi
-
-                echo "Preparing to install SSL certificate"
-                SERVER_IP=$(curl -s http://icanhazip.com)
-                DOMAIN_IP=$(dig +short neuronalnid.com)
-                
-                if [[ "$DOMAIN_IP" == "$SERVER_IP" ]]; then
-                  echo "Domain points to the server IP, proceeding with SSL setup"
-                  if ! [ -f /etc/letsencrypt/live/neuronalnid.com/fullchain.pem ]; then
-                    sudo apt-get install certbot python3-certbot-nginx -y
-                    sudo certbot --nginx -d neuronalnid.com -d www.neuronalnid.com --agree-tos --non-interactive
-                  else
-                    echo "SSL certificate already installed, skipping installation"
-                  fi
-                else
-                  echo "Domain does not point to this server IP, skipping SSL setup"
-                fi
-                
-                echo "Checking nginx configuration for www.neuronalnid.com"
-                need_reload=false
-                
-                if [ -f /root/Neural-Nid/backup/nginx/default ] && ! grep -q "www.neuronalnid.com" /root/Neural-Nid/backup/nginx/default; then
-                  echo "Updating nginx configuration"
-                  sudo cp /root/Neural-Nid/backup/nginx/default /etc/nginx/sites-available/default
-                  need_reload=true
-                fi
-                
-                echo "Checking nginx main configuration for rate limiting settings"
-                if [ -f /root/Neural-Nid/backup/nginx/nginx.conf ] && ! grep -q "limit_req_zone \$binary_remote_addr zone=my_api_limit:100m rate=10r/m;" /etc/nginx/nginx.conf; then
-                  echo "Updating nginx main configuration"
-                  sudo cp /root/Neural-Nid/backup/nginx/nginx.conf /etc/nginx/nginx.conf
-                  need_reload=true
-                fi
-                
-                if [ "$need_reload" = true ]; then
-                  echo "Reloading nginx to apply new configurations"
-                  sudo systemctl reload nginx
-                else
-                  echo "No changes made to nginx configuration, no reload needed"
-                fi
-                
-                echo "Server setup complete successfully"
                 
                 
                 # Build and run backend
