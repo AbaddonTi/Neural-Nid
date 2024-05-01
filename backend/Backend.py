@@ -97,13 +97,21 @@ Police nationale : 17
 Sapeurs pompiers : 18 ou 112 et le 114 pour les personnes sourdes ou malentendantes
 SOS Médecins : 04 67 72 22 15
 Urgences médicales / Samu : 15
+Urgences adultes : 04 67 33 95 00 - 04 67 33 81 68
+Urgences gynécologiques et obstétricales : 04 67 33 55 34
+Urgences cardiologiques (jour) : 04 67 33 59 53
+Urgences cardiologiques (nuit) : 04 67 33 55 34
+Urgences pédiatriques : 04 67 33 81 74 - 04 67 33 81 75
+Urgences psychiatriques : 04 67 33 22 93
+Urgences Tête et cou : 04 67 33 72 59
+Urgences AVC : 04 67 33 74 40
+SOS MAINS : 04 67 33 95 04
 Urgences sociales : 115
 Urgence vétérinaire : 04 67 45 46 84
 Régie des eaux de Montpellier 3M : 09 69 32 34 23
 ErDF Urgence dépannage électricité  : 09 72 67 50 34
 Urgence Sécurité gaz (GrDF) : 0 800 473 333
 Les gardes des professionnels de santé
-Ambulanciers / Dentistes / Infirmiers / Médecins : 15
 Pharmacies de garde (Serveur vocal) : 32 37 (service facturé 0,34 €/minute)
 Numéros verts, SOS, écoute, prévention
 Aide aux victimes : 08 VICTIMES ou 08 842 846 37 (prix d’un appel local, 7j/7, de 9h à 21h)
