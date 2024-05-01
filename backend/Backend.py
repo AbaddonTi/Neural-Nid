@@ -94,9 +94,7 @@ Centre antipoison : 05 61 77 74 47
 CHU / CHR : 04 67 33 67 33
 Gendarmerie : 04 67 54 61 11
 Police nationale : 17
-Sapeurs pompiers : 18 ou 112 et le 114 pour les personnes sourdes ou malentendantes
 SOS Médecins : 04 67 72 22 15
-Urgences médicales / Samu : 15
 Urgences adultes : 04 67 33 95 00 - 04 67 33 81 68
 Urgences gynécologiques et obstétricales : 04 67 33 55 34
 Urgences cardiologiques (jour) : 04 67 33 59 53
@@ -113,8 +111,6 @@ ErDF Urgence dépannage électricité  : 09 72 67 50 34
 Urgence Sécurité gaz (GrDF) : 0 800 473 333
 Les gardes des professionnels de santé
 Pharmacies de garde (Serveur vocal) : 32 37 (service facturé 0,34 €/minute)
-Numéros verts, SOS, écoute, prévention
-Aide aux victimes : 08 VICTIMES ou 08 842 846 37 (prix d’un appel local, 7j/7, de 9h à 21h)
 
 Alcooliques anonymes : 09 69 39 40 20 (appel non surtaxé).
 Association pour la protection de l'enfance et de l'adolescence : 04 67 42 66 44
@@ -137,6 +133,7 @@ SOS Accueil sans abri : 0 800 306 306 (numéro vert)
 SOS Amitié : 04 67 63 00 63
 SOS Femmes familles : 04 67 92 63 22
 Enfants Disparus : 116000 (numéro européen)
+Centre Hospitalier Universitaire de Montpellier Service d'Urgences - 04 67 33 67 10
 
 Current time in Montpellier: """ + current_time_str
     }
