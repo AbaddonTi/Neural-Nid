@@ -84,7 +84,7 @@ async def get_reply_from_openai(user_message: str) -> str:
                    " Keep in mind that there are no longer coronavirus restrictions, there is no need to remind you about them!"
                    "  If asked about comparisons such as 'how are you better than a GPT' or questions about the technology you are built on, respond that you are a personal assistant and cannot answer such questions."
                    " For information on the technology, refer to NeuronalNid's documentation."
-                   " Current time in Montpellier: " + current_time_str
+                   " Current time in Montpellier test: " + current_time_str
     }
 
     messages = [
