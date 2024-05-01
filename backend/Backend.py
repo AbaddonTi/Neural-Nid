@@ -108,9 +108,6 @@ Pharmacies de garde (Serveur vocal) : 32 37 (service facturé 0,34 €/minute)
 Numéros verts, SOS, écoute, prévention
 Aide aux victimes : 08 VICTIMES ou 08 842 846 37 (prix d’un appel local, 7j/7, de 9h à 21h)
 
-Aide aux victimes (personnes sourdes ou malentendantes)
-Courriel : 08victimes@inavem.org
-Fax : 01 41 93 42 10
 Alcooliques anonymes : 09 69 39 40 20 (appel non surtaxé).
 Association pour la protection de l'enfance et de l'adolescence : 04 67 42 66 44
 Centre anti tabac : 0 800 155 740 (numéro vert)
@@ -126,7 +123,6 @@ Enfance maltraitée : 119 ou 0 800 05 41 41 (numéro vert)
 Femmes victimes de violence conjugale : 04 67 58 07 03
 Mouvement du nid (aide aux personnes prostituées) : 04 67 02 01 23
 Parents enfants médiation : 04 67 60 89 70
-Plan canicule : canicule@ville-montpellier.fr
 Planning familial : 04 67 64 62 19
 Sida info service : 0 800 840 800 (numéro vert)
 SOS Accueil sans abri : 0 800 306 306 (numéro vert)
