@@ -195,8 +195,12 @@ body {
     background-attachment: scroll;
 }
 
-#background-image-1 {
-    background-image: url('https://raw.githubusercontent.com/AbaddonTi/images_site_NN/main/images_site_NN/background-image-3.jpg');
+.background-image-1 {
+    background-image: url('https://github.com/AbaddonTi/images_site_NN/blob/main/images_site_NN/background-image-3.jpg?raw=true');
+}
+
+.background-image-2 {
+    background-image: url('https://github.com/AbaddonTi/images_site_NN/blob/main/images_site_NN/background-image-2.jpg?raw=true');
 }
 
 
@@ -242,17 +246,6 @@ body {
         padding-top: 75px;
     }
 
-    .background {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: var(--viewport-height);
-        background-image: url('https://raw.githubusercontent.com/AbaddonTi/images_site_NN/main/images_site_NN/background-image-2mob-min_1.jpg');
-        background-size: cover;
-        background-position: center;
-        background-color: #191d20;
-    }
 
     #chat-container {
         display: flex;

@@ -108,8 +108,33 @@ function getUserInfo(messageText) {
 }
 
 
-function showWelcomeMessage() {
-    const welcomeText = "Bonjour, <br><br>Je suis votre assistant personnel à Montpellier. <br><br>N'hésitez pas à me poser des questions dans n'importe quelle langue.";
+function applyBackgroundTheme() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const theme = urlParams.get('theme');
+    const backgroundElement = document.getElementById('background-image-1');
+    let welcomeText;
+
+    switch (theme) {
+        case 'tourism':
+            backgroundElement.className = 'background background-image-1';
+            welcomeText = "Bonjour, <br><br>Je suis votre guide touristique virtuel pour Montpellier. <br><br>N'hésitez pas à me poser des questions pour planifier votre visite!";
+            break;
+        case 'charity':
+            backgroundElement.className = 'background background-image-2';
+            welcomeText = "Bonjour, <br><br>Je suis ici pour vous soutenir dans les moments difficiles. <br><br>Si vous avez besoin d'aide ou de ressources fournies par des organisations caritatives, n'hésitez pas à me demander.";
+            break;
+        default:
+            backgroundElement.className = 'background background-image-1';
+            welcomeText = "Bonjour, <br><br>Je suis votre assistant personnel à Montpellier. <br><br>N'hésitez pas à me poser des questions dans n'importe quelle langue.";
+    }
+
+    showWelcomeMessage(welcomeText);
+}
+
+
+
+
+function showWelcomeMessage(welcomeText) {
     const loadingElement = appendLoadingSpinner();
 
     setTimeout(() => {
@@ -118,6 +143,7 @@ function showWelcomeMessage() {
         scrollToMessage(messageList.lastChild);
     }, 2500);
 }
+
 
 
 function clearInput() {
@@ -143,7 +169,7 @@ function sendUserMessage(messageText) {
 
 // region Setup
 document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(showWelcomeMessage, 500);
+    applyBackgroundTheme();
     updateCharactersLeft();
     messageInput.addEventListener('input', updateCharactersLeft);
 });
