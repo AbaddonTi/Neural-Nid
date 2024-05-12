@@ -121,14 +121,14 @@ function applyBackgroundTheme() {
     switch (theme) {
         case 'tourism':
             backgroundElement.className = 'background background-image-1';
-            welcomeText = "Bonjour, <br><br>Je suis votre guide touristique virtuel pour Montpellier. <br><br>N'hésitez pas à me poser des questions pour planifier votre visite!";
+            welcomeText = "Bonjour, <br><br>Je suis votre guide touristique virtuel pour Montpellier. <br><br>N'hésitez pas à me poser des questions pour planifier votre visite dans n'importe quelle langue.!";
             break;
         case 'charity':
             backgroundElement.className = 'background background-image-2';
-            welcomeText = "Bonjour, <br><br>Je suis ici pour vous soutenir dans les moments difficiles. <br><br>Si vous avez besoin d'aide ou de ressources fournies par des organisations caritatives, n'hésitez pas à me demander.";
+            welcomeText = "Bonjour, <br><br>Si vous avez besoin d'aide ou de ressources fournies par des organisations caritatives, n'hésitez pas à me demander dans n'importe quelle langue.";
             break;
         default:
-            backgroundElement.className = 'background background-image-1';
+            backgroundElement.className = 'background background-image-3';
             welcomeText = "Bonjour, <br><br>Je suis votre assistant personnel à Montpellier. <br><br>N'hésitez pas à me poser des questions dans n'importe quelle langue.";
     }
 
