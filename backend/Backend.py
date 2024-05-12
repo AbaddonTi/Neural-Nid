@@ -56,13 +56,6 @@ async def send_message(request: Request):
     user_message = user_message[:1000]
     context = data.get('context', None)
 
-    # Логируем полученные данные
-    logging.info(f"Received message: {user_message}")
-    logging.info(f"Theme: {theme}")
-    if context:
-        logging.info(f"Last user message: {context.get('lastUserMessage')}")
-        logging.info(f"Last bot response: {context.get('lastBotResponse')}")
-
     openai_response = await get_reply_from_openai(user_message, theme, context)
     user_ip = get_user_ip(request)
     log_data = {
