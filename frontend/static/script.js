@@ -36,11 +36,10 @@ function handleFormSubmit(event) {
 
     disableUI();
     clearInput();
-    updateCharactersLeft(); 
+    updateCharactersLeft();
     const userMessageElement = appendMessage(messageText, 'user');
     scrollToMessage(userMessageElement);
     sendUserMessage(messageText)
-        .then(handleBotResponse)
         .catch(handleError)
         .finally(() => enableUI());
 }
