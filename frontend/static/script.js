@@ -155,6 +155,9 @@ function clearInput() {
 // region Network Requests
 function sendUserMessage(messageText) {
     const userInfo = getUserInfo(messageText);
+    const theme = new URLSearchParams(window.location.search).get('theme');
+    userInfo.theme = theme;
+
     const loadingElement = appendLoadingSpinner();
     return fetch('https://neuronalnid.com/api/send_message', {
         method: 'POST',
