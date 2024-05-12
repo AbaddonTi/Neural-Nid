@@ -13,9 +13,14 @@ gtag('config', 'G-B9SZ2PRDMG');
 
 
 // region Event Handlers
+
+let lastUserMessage = null;
+let lastBotResponse = null;
+
 function handleBotResponse(data) {
     const botMessageElement = appendMessage(data.reply, 'bot');
     scrollToMessage(botMessageElement);
+    lastBotResponse = data.reply;
     gtag('event', 'message_receive', {
         'event_category': 'Message',
         'event_label': 'Message Received'
@@ -132,8 +137,6 @@ function applyBackgroundTheme() {
 }
 
 
-
-
 function showWelcomeMessage(welcomeText) {
     const loadingElement = appendLoadingSpinner();
 
@@ -143,7 +146,6 @@ function showWelcomeMessage(welcomeText) {
         scrollToMessage(messageList.lastChild);
     }, 2500);
 }
-
 
 
 function clearInput() {
@@ -158,6 +160,13 @@ function sendUserMessage(messageText) {
     const theme = new URLSearchParams(window.location.search).get('theme');
     userInfo.theme = theme;
 
+    if (lastUserMessage && lastBotResponse) {
+        userInfo.context = {
+            lastUserMessage,
+            lastBotResponse
+        };
+    }
+
     const loadingElement = appendLoadingSpinner();
     return fetch('https://neuronalnid.com/api/send_message', {
         method: 'POST',
@@ -165,7 +174,14 @@ function sendUserMessage(messageText) {
         body: JSON.stringify(userInfo)
     })
         .then(response => response.json())
-        .finally(() => messageList.removeChild(loadingElement));
+        .then(data => {
+            handleBotResponse(data);
+            return data;
+        })
+        .finally(() => {
+            messageList.removeChild(loadingElement);
+            lastUserMessage = messageText;
+        });
 }
 // endregion Network Requests
 

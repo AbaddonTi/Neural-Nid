@@ -54,7 +54,8 @@ async def send_message(request: Request):
     user_message = data.get('message', '')
     theme = data.get('theme', 'default')
     user_message = user_message[:1000]
-    openai_response = await get_reply_from_openai(user_message, theme)
+    context = data.get('context', None)
+    openai_response = await get_reply_from_openai(user_message, theme, context)
     user_ip = get_user_ip(request)
     log_data = {
         'IP': user_ip,
@@ -75,7 +76,7 @@ async def format_ai_response(text: str) -> str:
     return re.sub(r'(\.|\!|\?|\:)(\s)(?!\s)', r'\1\2\n\n', text)
 
 
-async def get_reply_from_openai(user_message: str, theme: str) -> str:
+async def get_reply_from_openai(user_message: str, theme: str, context: dict) -> str:
     current_time_str = get_current_time_in_montpellier()
 
     if theme == 'charity':
@@ -95,11 +96,15 @@ If asked about comparisons such as 'how are you better than a GPT' or questions 
 For information on the technology, refer to NeuronalNid's documentation.
 Current time in Montpellier:  """ + current_time_str
 
-
     messages = [
-        {"role": "system", "content": prompt},
-        {"role": "user", "content": user_message}
+        {"role": "system", "content": prompt}
     ]
+
+    if context:
+        messages.append({"role": "user", "content": context['lastUserMessage']})
+        messages.append({"role": "assistant", "content": context['lastBotResponse']})
+
+    messages.append({"role": "user", "content": user_message})
 
     try:
         response = await run_in_threadpool(
