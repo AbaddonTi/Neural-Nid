@@ -125,7 +125,7 @@ function applyBackgroundTheme() {
             break;
         case 'charity':
             backgroundElement.className = 'background background-image-2';
-            welcomeText = "Bonjour, <br><br>Si vous avez besoin d'aide ou de ressources fournies par des organisations caritatives, n'hésitez pas à me demander dans n'importe quelle langue.";
+            welcomeText = "Bonjour, <br><br>Si vous avez besoin d'aide ou de ressources fournies par des organisations caritatives à Montpellier, n'hésitez pas à me demander dans n'importe quelle langue.";
             break;
         default:
             backgroundElement.className = 'background background-image-3';
