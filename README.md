@@ -1,8 +1,5 @@
 
 
-Uploading NN.mp4…
-
-
 # Neural-Nid Project
 
 ## Project Structure
