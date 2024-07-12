@@ -1,6 +1,9 @@
 
 
-# Neural-Nid Project
+# Neuronal-Nid Project
+
+Demo Reel : ```https://drive.google.com/file/d/1XOzLi-MXFg9R_dqyCqucIAb_voxPManr/view?usp=sharing```
+
 
 ## Project Structure
 
