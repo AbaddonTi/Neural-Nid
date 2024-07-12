@@ -1,9 +1,12 @@
 
-![NN Hub](https://github.com/AbaddonTi/Neural-Nid/assets/145202297/a4e3c1e7-901a-4b92-9ccd-65eb1c1e6f97)
+
+Uploading NN.mp4…
 
 
+# Neural-Nid Project
 
-Структура проекта:
+## Project Structure
+
 ```
 .
 ├── backend
@@ -26,43 +29,44 @@
 └── update.sh
 ```
 
-- Backend.py и Statistics - посторены на FastAPI, Бэк получает инфу и запросы с Фронта, обрабатывает и возвращает назад так же отправляя дубликат на Statistics, которая коллирует все в csv файл в папку logs
-- Независимый app Script в гугл таблице раз в минуту делает запросы к серверу, забирая файл csv и размещая в таблице
-- Все части размещены по докер контейнерам и общаются внутри сети докер
-- обновление и разверывание на сервере всей системы осуществляется скриптым update.sh и запускается командой
+
+## Project Overview
+
+The **Neural-Nid** project is a comprehensive system comprising backend and statistics components built with FastAPI, a frontend interface, and logging functionality. The key components are containerized using Docker for streamlined deployment and communication.
+
+### Backend
+- **Backend.py**: Handles requests from the frontend, processes data, and returns responses. It also sends duplicate data to the statistics component.
+- **Dockerfile**: Defines the Docker image for the backend service.
+- **requirements.txt**: Lists the dependencies required by the backend.
+
+### Frontend
+- **Dockerfile**: Defines the Docker image for the frontend service.
+- **static/**: Contains static files including `index.html`, `manifest.json`, `script.js`, and `style.css`.
+
+### Logs
+- **logs.csv**: Stores the collated data from the backend and statistics services.
+
+### Statistics
+- **Statistics.py**: Receives data from the backend, collates it into a CSV file stored in the `logs` directory.
+- **Dockerfile**: Defines the Docker image for the statistics service.
+- **requirements.txt**: Lists the dependencies required by the statistics service.
+
+### Additional Components
+- **update.sh**: Script for updating and deploying the entire system on the server.
+- **backup/**: Stores essential files for emergency system recovery.
+
+## Functionality
+
+- The **backend** component, built with FastAPI, processes and responds to requests from the frontend and forwards a copy of the data to the **statistics** component.
+- The **statistics** component, also built with FastAPI, compiles received data into a CSV file located in the `logs` directory.
+- An independent Google Sheets script requests the CSV file from the server every minute, updating the spreadsheet with the latest data.
+- All components are deployed in Docker containers, facilitating communication within a Docker network.
+
+## Deployment
+
+To deploy the entire service, clone the repository and run the `update.sh` script from the root directory:
+
 ```bash
+git clone git@github.com:AbaddonTi/Neural-Nid.git
 chmod +x /root/Neural-Nid/update.sh && /root/Neural-Nid/update.sh
 ```
-- папка backup хранит необходимые файлы для экстренного восстановления системы
-
-Лист задач:
-1) Расширить приветствие
-2) в сайт встроить день ночь и время года  а так же паралакс для чата
-3) Улучшение сервиса статки:
-- Хранение данных в базе данных- PostgreSQL
-- Очереди сообщений для буферизации запросов  RabbitMQ, Kafka, или AWS SQS
-4) ограничить ввод вывод для юзеров
-5) Нарулить ансамбль нейронок
-6) Победить дудос
-7) Создать память чата и пользователя
-8) переделать ее в некомерц
-9) заглушку сделать если сайт не доступен
-10) языки приветствия добавить
-11) Ограничить отдновременное число подключений и ввести баны за слишком частое использование сервиса
-12) Встроить точноее текущее время
-13) Создать уникальные идентификаторы юзеров с ограниченным сроком хранения
-
-
-Выполненые задачи:
-1) Flask заменен на Gunicorn во всех сервисах
-2) - Асинхронная обработка запросов с использованием FastAPI добавлена
-3) Приветствие добавить при загрузке чата
-4) Встроить гугл аналитику
-5) 
-
-Структура общения нейронок:
-1) Основная ИИ lvl 1 (Main1) - задача помнить пользователя и его характеристики
-2) Основная ИИ lvl 2 (Main2) - задача помнить чат сессии пользователя и его характеристики
-3) Вспомогательная ИИ lvl 1 (Auxiliary1) - должна определить сферу запроса ввиде ключа (например "Туризм" или "Социальная помощь") и под ключа (например "Рассписание бесплатных обедов" или "Срочное жилье"), и передать на следующий уровень
-4) Вспомогательная ИИ lvl 2 (Auxiliary2) - принять ключ и из соответствующего документа в базе знаний вернуть нужную часть данных
-5) ИИ для Ответа пользователю lvl 1 (Response1) - получить выводы от Main1 и Main2 и сформировать на основе их стиль ответа и образ пользователя, за тем на основе данных от AuxiliaryS оформить финальный готовый ответ
